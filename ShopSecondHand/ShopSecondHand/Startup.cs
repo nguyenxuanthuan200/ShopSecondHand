@@ -2,14 +2,19 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ShopSecondHand.Models;
+using ShopSecondHand.Repository.BuildingRepository;
+using ShopSecondHand.Repository.UserRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ShopSecondHand
@@ -27,7 +32,24 @@ namespace ShopSecondHand
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddDbContext<ShopSecondHandContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
+
+            services.AddScoped<IBuildingRepository, BuildingRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            //services.AddCors();
+            //services.AddControllersWithViews()
+            //    .AddNewtonsoftJson()
+            //    .AddXmlDataContractSerializerFormatters();
+
+            // Add auto mapper
+            services.AddAutoMapper(typeof(Program).Assembly);
+
+            services.AddControllers()
+               .AddJsonOptions(x =>
+           x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShopSecondHand", Version = "v1" });

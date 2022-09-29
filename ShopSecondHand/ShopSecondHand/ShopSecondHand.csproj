@@ -5,7 +5,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.15">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.15">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\RequestModels\CategoryRequest\" />
+    <Folder Include="Data\RequestModels\MessageRequest\" />
+    <Folder Include="Data\RequestModels\WalletRequest\" />
+    <Folder Include="Data\RequestModels\TransactionRequest\" />
+    <Folder Include="Data\RequestModels\RoleRequest\" />
+    <Folder Include="Data\RequestModels\ProductRequest\" />
+    <Folder Include="Data\RequestModels\PostRequest\" />
+    <Folder Include="Data\RequestModels\PaymentRequest\" />
+    <Folder Include="Data\RequestModels\OrderDetailRequest\" />
+    <Folder Include="Data\RequestModels\OrderRequest\" />
   </ItemGroup>
 
 </Project>
