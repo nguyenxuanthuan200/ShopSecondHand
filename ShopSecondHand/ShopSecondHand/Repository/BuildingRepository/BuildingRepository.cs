@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using ShopSecondHand.Data.RequestModels.BuildingRequest;
 using ShopSecondHand.Data.ResponseModels.BuildingResponse;
 using ShopSecondHand.Models;
@@ -12,19 +13,20 @@ namespace ShopSecondHand.Repository.BuildingRepository
     public class BuildingRepository : IBuildingRepository
     {
         private readonly ShopSecondHandContext dbContext;
+        private readonly IMapper _mapper;
 
-        public BuildingRepository(ShopSecondHandContext dbContext)
+        public BuildingRepository(ShopSecondHandContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            _mapper = mapper;
         }
 
-        public async Task<CreateBuildingResponse> AddBuilding(CreateBuildingRequest buildingRequest)
+        public async Task<CreateBuildingResponse> CreateBuilding(CreateBuildingRequest buildingRequest)
         {
             var building = await dbContext.Buildings
-                 .FirstOrDefaultAsync(p => p.Name.Equals(buildingRequest.Name));
+                 .SingleOrDefaultAsync(p => p.Name.Equals(buildingRequest.Name));
             if (building != null)
                 return null;
-
             Building buildingg = new Building();
             {
                 buildingg.Id = new Guid();
@@ -33,13 +35,8 @@ namespace ShopSecondHand.Repository.BuildingRepository
             };
             var result = await dbContext.Buildings.AddAsync(buildingg);
             await dbContext.SaveChangesAsync();
-            var re = new CreateBuildingResponse()
-            {
-                Name = buildingg.Name,
-                Address = buildingg.Address
-            };
+            var re = _mapper.Map<CreateBuildingResponse>(buildingg);
             return re;
-
         }
 
         public  void DeleteBuilding(Guid id)
@@ -106,19 +103,15 @@ namespace ShopSecondHand.Repository.BuildingRepository
         public async Task<UpdateBuildingResponse> UpdateBuilding(Guid id, UpdateBuildingRequest buildingRequest)
         {
             var upBuilding = await dbContext.Buildings.SingleOrDefaultAsync(c => c.Id == id);
-
+            if (id!=buildingRequest.Id) return null;
             if (upBuilding == null) return null;
+
             upBuilding.Name = buildingRequest.Name;
             upBuilding.Address = buildingRequest.Address;
             dbContext.Buildings.Update(upBuilding);
             await dbContext.SaveChangesAsync();
 
-            var up = new UpdateBuildingResponse()
-            {
-                Name = upBuilding.Name,
-                Address = upBuilding.Address,
-
-            };
+            var up = _mapper.Map<UpdateBuildingResponse>(upBuilding);
             return up;
         }
 

@@ -1,28 +1,31 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShopSecondHand.Data.RequestModels.BuildingRequest;
-using ShopSecondHand.Data.ResponseModels.BuildingResponse;
+using ShopSecondHand.Data.RequestModels.CategoryRequest;
+using ShopSecondHand.Data.ResponseModels.CategoryResponse;
 using ShopSecondHand.Models;
-using ShopSecondHand.Repository.BuildingRepository;
+using ShopSecondHand.Repository.CategoryRepository;
 using System;
 using System.Threading.Tasks;
-
 namespace ShopSecondHand.Controllers
 {
-    [Route("api/BuildingController")]
-    public class BuildingController : ControllerBase
+    [Route("api/CategoryController")]
+    public class CategoryController : ControllerBase
     {
-        private readonly IBuildingRepository buildingRepository;
-        public BuildingController(IBuildingRepository buildingRepository)
+        private readonly ICategoryRepository categoryRepository;
+        public CategoryController(ICategoryRepository categoryRepository)
         {
-            this.buildingRepository = buildingRepository;
+            this.categoryRepository = categoryRepository;
         }
         [HttpGet]
-        public async Task<ActionResult> GetBuilding()
+        public async Task<ActionResult> GetCategory()
         {
             try
             {
-                return Ok(await buildingRepository.GetBuilding());
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                return Ok(await categoryRepository.GetCategory());
             }
             catch (Exception)
             {
@@ -30,12 +33,16 @@ namespace ShopSecondHand.Controllers
                     "Error retrieving data from the database.");
             }
         }
-        [HttpGet("getBuildingByName")]
-        public async Task<ActionResult<GetBuildingResponse>> GetBuildingByName(String name)
+        [HttpGet("getCategoryByName")]
+        public async Task<ActionResult<GetCategoryResponse>> GetCategoryByName(String name)
         {
             try
             {
-                var result = await buildingRepository.GetBuildingByName(name);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var result = await categoryRepository.GetCategoryByName(name);
                 if (result == null)
                 {
                     return NotFound();
@@ -49,12 +56,16 @@ namespace ShopSecondHand.Controllers
 
             }
         }
-        [HttpGet("getBuildingById")]
-        public async Task<ActionResult<GetBuildingResponse>> GetBuildingById(Guid id)
+        [HttpGet("getCategoryById")]
+        public async Task<ActionResult<GetCategoryResponse>> GetCategoryById(Guid id)
         {
             try
             {
-                var result = await buildingRepository.GetBuildingById(id);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var result = await categoryRepository.GetCategoryById(id);
                 if (result == null)
                 {
                     return NotFound();
@@ -69,15 +80,11 @@ namespace ShopSecondHand.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<CreateBuildingResponse>> CreateBuilding([FromBody] CreateBuildingRequest buildingRequest)
+        public async Task<ActionResult<CreateCategoryResponse>> CreateCategory([FromBody] CreateCategoryRequest categoryRequest)
         {
             try
-            {
-                if (buildingRequest == null)
-                {
-                    return BadRequest();
-                }
-                var createBuilding = await buildingRepository.CreateBuilding(buildingRequest);
+            { 
+                var createBuilding = await categoryRepository.CreateCategory(categoryRequest);
                 if (createBuilding != null)
                 {
                     return Ok(createBuilding);
@@ -98,15 +105,19 @@ namespace ShopSecondHand.Controllers
             }
         }
         [HttpPut("{id:Guid}")]
-        public async Task<ActionResult<UpdateBuildingResponse>> UpdateBuilding(Guid id, [FromBody] UpdateBuildingRequest buildingRequest)
+        public async Task<ActionResult<UpdateCategoryResponse>> UpdateCategory(Guid id, [FromBody] UpdateCategoryRequest buildingRequest)
         {
             try
             {
-                var updateBuilding = await buildingRepository.UpdateBuilding(id, buildingRequest);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var updateBuilding = await categoryRepository.UpdateCategory(id, buildingRequest);
 
                 if (updateBuilding == null)
                 {
-                    return NotFound($"Building  with Id = {id} not found!");
+                    return NotFound($"Category  with Id = {id} not found!");
                 }
 
                 return Ok($"update thanh cong");
@@ -119,19 +130,22 @@ namespace ShopSecondHand.Controllers
 
         }
         [HttpDelete("{id:Guid}")]
-        public void DeleteBuilding(Guid id)
+        public void DeleteCategory(Guid id)
         {
             try
             {
-                var updateBuilding = buildingRepository.GetBuildingById(id);
+
+                var updateBuilding = categoryRepository.GetCategoryById(id);
 
                 if (updateBuilding == null)
                 {
                     StatusCode(StatusCodes.Status500InternalServerError,
                    "Error retrieving data from the database.");
                 }
-                buildingRepository.DeleteBuilding(id);
-                Ok();
+                else {
+                    categoryRepository.DeleteCategory(id);
+                    Ok();
+                        }
             }
             catch (Exception)
             {
@@ -139,7 +153,6 @@ namespace ShopSecondHand.Controllers
                     "Error deleting Account!");
             }
         }
-
-
     }
+
 }

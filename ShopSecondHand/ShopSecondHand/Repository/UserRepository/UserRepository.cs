@@ -27,7 +27,7 @@ namespace ShopSecondHand.Repository.UserRepository
             if (user != null)
                 return null;
             var roleId = await dbContext.Roles
-                 .FirstOrDefaultAsync(p => p.Name.Equals("User"));
+                 .FirstOrDefaultAsync(p => p.Name.Equals("User")); 
 
             User userr = new User();
             {
@@ -57,7 +57,7 @@ namespace ShopSecondHand.Repository.UserRepository
             return re;
         }
 
-        public void DeleteUser(String userName)
+        public void DeleteUser(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -115,6 +115,27 @@ namespace ShopSecondHand.Repository.UserRepository
             return result;
         }
 
+        public async Task<GetUserResponse> GetUserById(Guid id)
+        {
+            var getById = await dbContext.Users
+               .SingleOrDefaultAsync(p => p.Id==id);
+            if (getById != null)
+            {
+                var re = new GetUserResponse()
+                {
+                    UserName = getById.UserName,
+                    Password = getById.Password,
+                    FullName = getById.FullName,
+                    Description = getById.Description,
+                    Phone = getById.Phone,
+                    Gender = getById.Gender,
+                    BuildingId = getById.BuildingId,
+                };
+                return re;
+            }
+            return null;
+        }
+
         public async Task<GetUserResponse> GetUserByUserName(string name)
         {
             var getByUserName = await dbContext.Users
@@ -136,16 +157,15 @@ namespace ShopSecondHand.Repository.UserRepository
             return null;
         }
 
-        public async Task<UpdateUserResponse> UpdateUser(String userName, UpdateUserRequest userRequest)
+        public async Task<UpdateUserResponse> UpdateUser(Guid id, UpdateUserRequest userRequest)
         {
             var upUser = await dbContext.Users
-                .Where(p => p.UserName.Equals(userName))
-                .FirstOrDefaultAsync();
+                .Where(p => p.Id==id)
+                .SingleOrDefaultAsync();
 
-            if (upUser == null)
-            {
-                return null;
-            }
+            if (upUser == null) return null;
+            if(id!=userRequest.Id) return null;
+            
             upUser.Password = userRequest.Password;
             upUser.FullName = userRequest.FullName;
             upUser.Description = userRequest.Description;

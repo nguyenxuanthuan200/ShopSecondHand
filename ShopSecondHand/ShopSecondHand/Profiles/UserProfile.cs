@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using ShopSecondHand.Data.ResponseModels.UserResponse;
 
 namespace ShopSecondHand.Profiles
 {

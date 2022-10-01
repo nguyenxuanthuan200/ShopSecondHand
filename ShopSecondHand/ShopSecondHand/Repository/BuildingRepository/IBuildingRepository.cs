@@ -11,7 +11,7 @@ namespace ShopSecondHand.Repository.BuildingRepository
         Task<IEnumerable<GetBuildingResponse>> GetBuilding();
         Task<GetBuildingResponse> GetBuildingByName(String name);
         Task<GetBuildingResponse> GetBuildingById(Guid id);
-        Task<CreateBuildingResponse> AddBuilding(CreateBuildingRequest buildingRequest);
+        Task<CreateBuildingResponse> CreateBuilding(CreateBuildingRequest buildingRequest);
         Task<UpdateBuildingResponse> UpdateBuilding(Guid id, UpdateBuildingRequest buildingRequest);
         void DeleteBuilding(Guid id);
     }

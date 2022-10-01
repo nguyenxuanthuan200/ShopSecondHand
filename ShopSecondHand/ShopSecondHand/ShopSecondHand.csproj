@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\RequestModels\CategoryRequest\" />
     <Folder Include="Data\RequestModels\MessageRequest\" />
     <Folder Include="Data\RequestModels\WalletRequest\" />
     <Folder Include="Data\RequestModels\TransactionRequest\" />

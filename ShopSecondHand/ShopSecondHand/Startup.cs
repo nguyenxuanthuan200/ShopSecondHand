@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using ShopSecondHand.Models;
 using ShopSecondHand.Repository.BuildingRepository;
+using ShopSecondHand.Repository.CategoryRepository;
 using ShopSecondHand.Repository.UserRepository;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,8 @@ namespace ShopSecondHand
 
             services.AddScoped<IBuildingRepository, BuildingRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+
 
             //services.AddCors();
             //services.AddControllersWithViews()

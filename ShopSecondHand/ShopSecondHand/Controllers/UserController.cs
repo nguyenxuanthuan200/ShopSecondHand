@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ShopSecondHand.Controllers
 {
     [Route("api/UserController")]
-    public class UserController : Controller
+    public class UserController : ControllerBase
     {
         private readonly IUserRepository userRepository;
         public UserController(IUserRepository userRepository)
@@ -29,7 +29,7 @@ namespace ShopSecondHand.Controllers
                     "Error retrieving data from the database.");
             }
         }
-        [HttpGet("{name}")]
+        [HttpGet("getByUserName")]
         public async Task<ActionResult<GetUserResponse>> GetUserByUserName(String name)
         {
             try
@@ -48,14 +48,52 @@ namespace ShopSecondHand.Controllers
 
             }
         }
+        [HttpGet("getByBuildingName")]
+        public async Task<ActionResult> GetUserByBuildingName(String name)
+        {
+            try
+            {
+                var result = await userRepository.GetUserByBuildingName(name);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error retrieving data from the database.");
+
+            }
+        }
+        [HttpGet("getById")]
+        public async Task<ActionResult<GetUserResponse>> GetUserById(Guid id)
+        {
+            try
+            {
+                var result = await userRepository.GetUserById(id);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return result;
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error retrieving data from the database.");
+
+            }
+        }
         [HttpPost]
         public async Task<ActionResult<CreateUserResponse>> CreateUser([FromBody] CreateUserRequest userRequest)
         {
             try
             {
-                if (userRequest == null)
+                if (!ModelState.IsValid)
                 {
-                    return BadRequest();
+                    return BadRequest(ModelState);
                 }
                 var createUser = await userRepository.CreateUser(userRequest);
                 if (createUser != null)
@@ -71,16 +109,16 @@ namespace ShopSecondHand.Controllers
                    e.Message);
             }
         }
-        [HttpPut("{userName}")]
-        public async Task<ActionResult<UpdateUserResponse>> UpdateBuilding(String userName, [FromBody] UpdateUserRequest userRequest)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UpdateUserResponse>> UpdateUser(Guid id, [FromBody] UpdateUserRequest userRequest)
         {
             try
             {
-                var updateUser = await userRepository.UpdateUser(userName, userRequest);
+                var updateUser = await userRepository.UpdateUser(id, userRequest);
 
                 if (updateUser == null)
                 {
-                    return NotFound($"User  with UserName = {userName} not found!");
+                    return NotFound($"User  with UserName = {id} not found!");
                 }
 
                 return updateUser;
@@ -88,23 +126,23 @@ namespace ShopSecondHand.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error updating Store!");
+                    "Error updating User!");
             }
 
         }
-        [HttpDelete("{userName}")]
-        public void DeleteUser(String userName)
+        [HttpDelete("{id}")]
+        public void DeleteUser(Guid id)
         {
             try
             {
-                var updateBuilding = userRepository.GetUserByUserName(userName);
+                var updateBuilding = userRepository.GetUserById(id);
 
                 if (updateBuilding == null)
                 {
                     StatusCode(StatusCodes.Status500InternalServerError,
                    "Error retrieving data from the database.");
                 }
-                userRepository.DeleteUser(userName);
+                userRepository.DeleteUser(id);
                 Ok();
             }
             catch (Exception)
