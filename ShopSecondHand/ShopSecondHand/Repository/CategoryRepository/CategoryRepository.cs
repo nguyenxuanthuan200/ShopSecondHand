@@ -30,7 +30,7 @@ namespace ShopSecondHand.Repository.CategoryRepository
 
             Category categoryy = new Category();
             {
-                categoryy.Id = new Guid();
+                categoryy.Id = Guid.NewGuid();
                 categoryy.Name = categoryRequest.Name;
             };
             var result = await dbContext.Categories.AddAsync(categoryy);

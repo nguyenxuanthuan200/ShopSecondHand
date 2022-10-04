@@ -11,6 +11,9 @@ using Microsoft.OpenApi.Models;
 using ShopSecondHand.Models;
 using ShopSecondHand.Repository.BuildingRepository;
 using ShopSecondHand.Repository.CategoryRepository;
+using ShopSecondHand.Repository.OrderDetailRepository;
+using ShopSecondHand.Repository.OrderRepository;
+using ShopSecondHand.Repository.ProductRepository;
 using ShopSecondHand.Repository.UserRepository;
 using System;
 using System.Collections.Generic;
@@ -39,6 +42,9 @@ namespace ShopSecondHand
             services.AddScoped<IBuildingRepository, BuildingRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 
 
             //services.AddCors();

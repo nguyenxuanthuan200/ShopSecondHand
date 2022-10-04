@@ -9,7 +9,7 @@ namespace ShopSecondHand.Repository.BuildingRepository
     public interface IBuildingRepository
     {
         Task<IEnumerable<GetBuildingResponse>> GetBuilding();
-        Task<GetBuildingResponse> GetBuildingByName(String name);
+        Task<GetBuildingResponse> GetBuildingByName(string name);
         Task<GetBuildingResponse> GetBuildingById(Guid id);
         Task<CreateBuildingResponse> CreateBuilding(CreateBuildingRequest buildingRequest);
         Task<UpdateBuildingResponse> UpdateBuilding(Guid id, UpdateBuildingRequest buildingRequest);

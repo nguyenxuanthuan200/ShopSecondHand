@@ -27,11 +27,11 @@ namespace ShopSecondHand.Repository.UserRepository
             if (user != null)
                 return null;
             var roleId = await dbContext.Roles
-                 .FirstOrDefaultAsync(p => p.Name.Equals("User")); 
+                 .FirstOrDefaultAsync(p => p.Name.Equals("User"));
 
             User userr = new User();
             {
-                userr.Id = new Guid();
+                userr.Id = Guid.NewGuid();
                 userr.UserName = userRequest.UserName;
                 userr.Password = userRequest.Password;
                 userr.FullName = userRequest.FullName;
@@ -43,17 +43,7 @@ namespace ShopSecondHand.Repository.UserRepository
             };
             dbContext.Users.AddAsync(userr);
             dbContext.SaveChangesAsync();
-            var re =_mapper.Map<CreateUserResponse>(userr);
-            //var re = new CreateUserResponse()
-            //{
-            //    UserName = userr.UserName,
-            //    Password = userr.Password,
-            //    FullName = userr.FullName,
-            //    Description = userr.Description,
-            //    Phone = userr.Phone,
-            //    Gender = userr.Gender,
-            //    BuildingId = userr.BuildingId,
-            //};
+            var re = _mapper.Map<CreateUserResponse>(userr);
             return re;
         }
 
@@ -83,7 +73,7 @@ namespace ShopSecondHand.Repository.UserRepository
             return result;
         }
 
-        public async Task<IEnumerable<GetUserResponse>> GetUserByBuildingName(String name)
+        public async Task<IEnumerable<GetUserResponse>> GetUserByBuildingName(string name)
         {
             var getByName = await dbContext.Buildings
                 .FirstOrDefaultAsync(p => p.Name.Equals(name));
@@ -118,7 +108,7 @@ namespace ShopSecondHand.Repository.UserRepository
         public async Task<GetUserResponse> GetUserById(Guid id)
         {
             var getById = await dbContext.Users
-               .SingleOrDefaultAsync(p => p.Id==id);
+               .SingleOrDefaultAsync(p => p.Id == id);
             if (getById != null)
             {
                 var re = new GetUserResponse()
@@ -160,12 +150,12 @@ namespace ShopSecondHand.Repository.UserRepository
         public async Task<UpdateUserResponse> UpdateUser(Guid id, UpdateUserRequest userRequest)
         {
             var upUser = await dbContext.Users
-                .Where(p => p.Id==id)
+                .Where(p => p.Id == id)
                 .SingleOrDefaultAsync();
 
             if (upUser == null) return null;
-            if(id!=userRequest.Id) return null;
-            
+            if (id != userRequest.Id) return null;
+
             upUser.Password = userRequest.Password;
             upUser.FullName = userRequest.FullName;
             upUser.Description = userRequest.Description;
@@ -176,18 +166,7 @@ namespace ShopSecondHand.Repository.UserRepository
             dbContext.Users.Update(upUser);
             await dbContext.SaveChangesAsync();
 
-            var up=_mapper.Map<UpdateUserResponse>(upUser);
-            //var up = new UpdateUserResponse()
-            //{
-            //    UserName= userName,
-            //    Password = upUser.Password,
-            //    FullName = upUser.FullName,
-            //    Description = upUser.Description,
-            //    Phone = upUser.Phone,
-            //    Gender = upUser.Gender,
-            //    BuildingId = upUser.BuildingId
-
-            //};
+            var up = _mapper.Map<UpdateUserResponse>(upUser);
             return up;
         }
     }

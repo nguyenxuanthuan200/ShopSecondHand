@@ -4,6 +4,7 @@ namespace ShopSecondHand.Data.ResponseModels.UserResponse
 {
     public class GetUserResponse
     {
+        public Guid Id { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public string FullName { get; set; }

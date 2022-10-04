@@ -9,7 +9,7 @@ namespace ShopSecondHand.Repository.CategoryRepository
     public interface ICategoryRepository
     {
         Task<IEnumerable<GetCategoryResponse>> GetCategory();
-        Task<GetCategoryResponse> GetCategoryByName(String name);
+        Task<GetCategoryResponse> GetCategoryByName(string name);
         Task<GetCategoryResponse> GetCategoryById(Guid id);
         Task<CreateCategoryResponse> CreateCategory(CreateCategoryRequest categoryRequest);
         Task<UpdateCategoryResponse> UpdateCategory(Guid id, UpdateCategoryRequest categoryRequest);

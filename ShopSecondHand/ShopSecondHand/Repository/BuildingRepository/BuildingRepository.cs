@@ -29,27 +29,28 @@ namespace ShopSecondHand.Repository.BuildingRepository
                 return null;
             Building buildingg = new Building();
             {
-                buildingg.Id = new Guid();
+                buildingg.Id = Guid.NewGuid();
                 buildingg.Name = buildingRequest.Name;
                 buildingg.Address = buildingRequest.Address;
             };
-            var result = await dbContext.Buildings.AddAsync(buildingg);
-            await dbContext.SaveChangesAsync();
+            dbContext.Buildings.AddAsync(buildingg);
+            dbContext.SaveChangesAsync();
             var re = _mapper.Map<CreateBuildingResponse>(buildingg);
             return re;
         }
 
-        public  void DeleteBuilding(Guid id)
+        public void DeleteBuilding(Guid id)
         {
             var deBuilding = dbContext.Buildings
                 .SingleOrDefault(p => p.Id == id);
             if (deBuilding == null)
             {
-                throw new Exception("This Building is unavailable!");
+                // throw new Exception("This Building is unavailable!");
+
             }
-               dbContext.Buildings.Remove(deBuilding);
-               dbContext.SaveChangesAsync();
-              
+            dbContext.Buildings.Remove(deBuilding);
+            dbContext.SaveChangesAsync();
+
         }
         public async Task<IEnumerable<GetBuildingResponse>> GetBuilding()
 
@@ -60,6 +61,7 @@ namespace ShopSecondHand.Repository.BuildingRepository
                 {
                     return new GetBuildingResponse()
                     {
+                        Id = x.Id,
                         Name = x.Name,
                         Address = x.Address
                     };
@@ -77,6 +79,7 @@ namespace ShopSecondHand.Repository.BuildingRepository
             {
                 var re = new GetBuildingResponse()
                 {
+                    Id = getByName.Id,
                     Name = getByName.Name,
                     Address = getByName.Address
                 };
@@ -93,6 +96,7 @@ namespace ShopSecondHand.Repository.BuildingRepository
             {
                 var re = new GetBuildingResponse()
                 {
+                    Id = getById.Id,
                     Name = getById.Name,
                     Address = getById.Address
                 };
@@ -103,7 +107,7 @@ namespace ShopSecondHand.Repository.BuildingRepository
         public async Task<UpdateBuildingResponse> UpdateBuilding(Guid id, UpdateBuildingRequest buildingRequest)
         {
             var upBuilding = await dbContext.Buildings.SingleOrDefaultAsync(c => c.Id == id);
-            if (id!=buildingRequest.Id) return null;
+            if (id != buildingRequest.Id) return null;
             if (upBuilding == null) return null;
 
             upBuilding.Name = buildingRequest.Name;
@@ -115,6 +119,6 @@ namespace ShopSecondHand.Repository.BuildingRepository
             return up;
         }
 
-       
+
     }
 }

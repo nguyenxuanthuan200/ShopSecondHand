@@ -10,8 +10,8 @@ namespace ShopSecondHand.Repository.UserRepository
     {
         Task<IEnumerable<GetUserResponse>> GetUser();
         Task<GetUserResponse> GetUserById(Guid id);
-        Task<GetUserResponse> GetUserByUserName(String name);
-        Task<IEnumerable<GetUserResponse>> GetUserByBuildingName(String name);
+        Task<GetUserResponse> GetUserByUserName(string name);
+        Task<IEnumerable<GetUserResponse>> GetUserByBuildingName(string name);
         Task<CreateUserResponse> CreateUser(CreateUserRequest userRequest);
         Task<UpdateUserResponse> UpdateUser(Guid id, UpdateUserRequest userRequest);
         void DeleteUser(Guid id);

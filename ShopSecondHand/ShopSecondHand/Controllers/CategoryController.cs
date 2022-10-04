@@ -8,7 +8,8 @@ using System;
 using System.Threading.Tasks;
 namespace ShopSecondHand.Controllers
 {
-    [Route("api/CategoryController")]
+    [Route("api/categorys")]
+    [ApiController]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryRepository categoryRepository;
@@ -33,8 +34,8 @@ namespace ShopSecondHand.Controllers
                     "Error retrieving data from the database.");
             }
         }
-        [HttpGet("getCategoryByName")]
-        public async Task<ActionResult<GetCategoryResponse>> GetCategoryByName(String name)
+        [HttpGet("search")]
+        public async Task<ActionResult> GetCategoryByName(string name)
         {
             try
             {
@@ -47,7 +48,7 @@ namespace ShopSecondHand.Controllers
                 {
                     return NotFound();
                 }
-                return result;
+                return Ok(result);
             }
             catch (Exception)
             {
@@ -56,8 +57,8 @@ namespace ShopSecondHand.Controllers
 
             }
         }
-        [HttpGet("getCategoryById")]
-        public async Task<ActionResult<GetCategoryResponse>> GetCategoryById(Guid id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetCategoryById(Guid id)
         {
             try
             {
@@ -70,7 +71,7 @@ namespace ShopSecondHand.Controllers
                 {
                     return NotFound();
                 }
-                return result;
+                return Ok(result);
             }
             catch (Exception)
             {
@@ -80,23 +81,21 @@ namespace ShopSecondHand.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<CreateCategoryResponse>> CreateCategory([FromBody] CreateCategoryRequest categoryRequest)
+        public async Task<ActionResult> CreateCategory(CreateCategoryRequest request)
         {
             try
-            { 
-                var createBuilding = await categoryRepository.CreateCategory(categoryRequest);
-                if (createBuilding != null)
+            {
+                if (request == null)
                 {
-                    return Ok(createBuilding);
-
-                    //return CreatedAtAction(nameof(GetAccountById),
-                    // new { id = createdAccount.AccountId }, createdAccount);
+                    return BadRequest();
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                   "Name da ton tai.");
-
-
-
+                var create = await categoryRepository.CreateCategory(request);
+                if (create == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                  "Category da ton tai.");
+                }
+                return Ok(create);
             }
             catch (Exception e)
             {
@@ -104,8 +103,8 @@ namespace ShopSecondHand.Controllers
                    e.Message);
             }
         }
-        [HttpPut("{id:Guid}")]
-        public async Task<ActionResult<UpdateCategoryResponse>> UpdateCategory(Guid id, [FromBody] UpdateCategoryRequest buildingRequest)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateCategory(Guid id,UpdateCategoryRequest request)
         {
             try
             {
@@ -113,14 +112,14 @@ namespace ShopSecondHand.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                var updateBuilding = await categoryRepository.UpdateCategory(id, buildingRequest);
+                var update = await categoryRepository.UpdateCategory(id, request);
 
-                if (updateBuilding == null)
+                if (update == null)
                 {
-                    return NotFound($"Category  with Id = {id} not found!");
+                    return NotFound();
                 }
 
-                return Ok($"update thanh cong");
+                return Ok(update);
             }
             catch (Exception)
             {
@@ -129,28 +128,30 @@ namespace ShopSecondHand.Controllers
             }
 
         }
-        [HttpDelete("{id:Guid}")]
+        [HttpDelete("{id}")]
         public void DeleteCategory(Guid id)
         {
             try
             {
 
-                var updateBuilding = categoryRepository.GetCategoryById(id);
+                var delete = categoryRepository.GetCategoryById(id);
 
-                if (updateBuilding == null)
+                if (delete == null)
                 {
                     StatusCode(StatusCodes.Status500InternalServerError,
                    "Error retrieving data from the database.");
                 }
-                else {
+                else
+                {
                     categoryRepository.DeleteCategory(id);
-                    Ok();
-                        }
+                    StatusCode(StatusCodes.Status200OK,
+                   "Delete Success.");
+                }
             }
             catch (Exception)
             {
                 StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error deleting Account!");
+                    "Error deleting!");
             }
         }
     }

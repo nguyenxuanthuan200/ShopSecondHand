@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace ShopSecondHand.Controllers
 {
-    [Route("api/BuildingController")]
+    [Route("api/buildings")]
+    [ApiController]
     public class BuildingController : ControllerBase
     {
         private readonly IBuildingRepository buildingRepository;
@@ -30,8 +31,8 @@ namespace ShopSecondHand.Controllers
                     "Error retrieving data from the database.");
             }
         }
-        [HttpGet("getBuildingByName")]
-        public async Task<ActionResult<GetBuildingResponse>> GetBuildingByName(String name)
+        [HttpGet("search")]
+        public async Task<ActionResult> GetBuildingByName(string name)
         {
             try
             {
@@ -40,7 +41,7 @@ namespace ShopSecondHand.Controllers
                 {
                     return NotFound();
                 }
-                return result;
+                return Ok(result);
             }
             catch (Exception)
             {
@@ -49,8 +50,8 @@ namespace ShopSecondHand.Controllers
 
             }
         }
-        [HttpGet("getBuildingById")]
-        public async Task<ActionResult<GetBuildingResponse>> GetBuildingById(Guid id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetBuildingById(Guid id)
         {
             try
             {
@@ -59,7 +60,7 @@ namespace ShopSecondHand.Controllers
                 {
                     return NotFound();
                 }
-                return result;
+                return Ok(result);
             }
             catch (Exception)
             {
@@ -69,27 +70,21 @@ namespace ShopSecondHand.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<CreateBuildingResponse>> CreateBuilding([FromBody] CreateBuildingRequest buildingRequest)
+        public async Task<ActionResult> CreateBuilding(CreateBuildingRequest request)
         {
             try
             {
-                if (buildingRequest == null)
+                if (request == null)
                 {
                     return BadRequest();
                 }
-                var createBuilding = await buildingRepository.CreateBuilding(buildingRequest);
-                if (createBuilding != null)
+                var create = await buildingRepository.CreateBuilding(request);
+                if (create != null)
                 {
-                    return Ok(createBuilding);
-
-                    //return CreatedAtAction(nameof(GetAccountById),
-                    // new { id = createdAccount.AccountId }, createdAccount);
+                    return Ok(create);
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                   "Name da ton tai.");
-
-
-
+                   "Building da ton tai.");
             }
             catch (Exception e)
             {
@@ -97,19 +92,19 @@ namespace ShopSecondHand.Controllers
                    e.Message);
             }
         }
-        [HttpPut("{id:Guid}")]
-        public async Task<ActionResult<UpdateBuildingResponse>> UpdateBuilding(Guid id, [FromBody] UpdateBuildingRequest buildingRequest)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateBuilding(Guid id, UpdateBuildingRequest request)
         {
             try
             {
-                var updateBuilding = await buildingRepository.UpdateBuilding(id, buildingRequest);
+                var update = await buildingRepository.UpdateBuilding(id, request);
 
-                if (updateBuilding == null)
+                if (update == null)
                 {
-                    return NotFound($"Building  with Id = {id} not found!");
+                    return NotFound();
                 }
 
-                return Ok($"update thanh cong");
+                return Ok(update);
             }
             catch (Exception)
             {
@@ -118,25 +113,26 @@ namespace ShopSecondHand.Controllers
             }
 
         }
-        [HttpDelete("{id:Guid}")]
+        [HttpDelete("{id}")]
         public void DeleteBuilding(Guid id)
         {
             try
             {
-                var updateBuilding = buildingRepository.GetBuildingById(id);
+                var delete = buildingRepository.GetBuildingById(id);
 
-                if (updateBuilding == null)
+                if (delete == null)
                 {
                     StatusCode(StatusCodes.Status500InternalServerError,
                    "Error retrieving data from the database.");
                 }
                 buildingRepository.DeleteBuilding(id);
-                Ok();
+                StatusCode(StatusCodes.Status200OK,
+                   "Delete Success.");
             }
             catch (Exception)
             {
                 StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error deleting Account!");
+                    "Error deleting!");
             }
         }
 
