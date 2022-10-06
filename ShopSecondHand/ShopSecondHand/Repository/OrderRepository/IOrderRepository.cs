@@ -14,6 +14,6 @@ namespace ShopSecondHand.Repository.OrderRepository
         Task<IEnumerable<GetOrderResponse>> GetOrderByPostId(Guid id);
         Task<CreateOrderResponse> CreateOrder(CreateOrderRequest request);
         Task<UpdateOrderResponse> UpdateOrder(Guid id, UpdateOrderRequest request);
-        void DeleteBuilding(Guid id);
+        void Delete(Guid id);
     }
 }

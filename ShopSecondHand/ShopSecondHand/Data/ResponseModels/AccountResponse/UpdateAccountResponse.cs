@@ -1,10 +1,11 @@
 ﻿using System;
-namespace ShopSecondHand.Data.RequestModels.UserRequest
+
+namespace ShopSecondHand.Data.ResponseModels.AccountResponse
 {
-    public class CreateUserRequest
+    public class UpdateAccountResponse
     {
         public string UserName { get; set; }
-        public string Password { get; set; }
+       // public string Password { get; set; }
         public string FullName { get; set; }
         public string Description { get; set; }
         public string Phone { get; set; }

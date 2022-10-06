@@ -12,7 +12,5 @@ namespace ShopSecondHand.Models
         public Guid? SenderId { get; set; }
         public Guid? ReceivereId { get; set; }
         public Guid? UserId { get; set; }
-
-        public virtual User User { get; set; }
     }
 }

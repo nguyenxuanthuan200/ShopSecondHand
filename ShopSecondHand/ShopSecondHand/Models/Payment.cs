@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 #nullable disable
-
 namespace ShopSecondHand.Models
 {
     public partial class Payment

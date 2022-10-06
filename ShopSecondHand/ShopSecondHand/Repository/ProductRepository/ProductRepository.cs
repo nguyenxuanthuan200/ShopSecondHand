@@ -93,25 +93,45 @@ namespace ShopSecondHand.Repository.ProductRepository
             return null;
         }
 
-        public async Task<GetProductResponse> GetProductByName(string name)
+        public async Task<IEnumerable<GetProductResponse>> GetProductByName(string name)
         {
-            var getByName = await dbContext.Products
-
-                .FirstOrDefaultAsync(p => p.Name.Equals(name));
-            if (getByName != null)
-            {
-                var re = new GetProductResponse()
+            var get = await dbContext.Products.ToListAsync();
+            IEnumerable<GetProductResponse> result = get.Select(
+                x =>
                 {
-                    Id = getByName.Id,
-                    Name = getByName.Name,
-                    Description = getByName.Description,
-                    Price = getByName.Price,
-                    Quantity = getByName.Quantity,
-                    CategoryId = getByName.CategoryId,
-                };
-                return re;
-            }
-            return null;
+                    return new GetProductResponse()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Description = x.Description,
+                        Price = x.Price,
+                        Quantity = x.Quantity,
+                        CategoryId = x.CategoryId,
+                    };
+                }
+                ).ToList();
+            return result;
+        }
+        public async Task<IEnumerable<GetProductResponse>> GetProductByCategoryId(Guid id)
+        {
+            var userByBuilding = await dbContext.Products
+                .Where(p => p.CategoryId == id).ToListAsync();
+
+            IEnumerable<GetProductResponse> result = userByBuilding.Select(
+                x =>
+                {
+                    return new GetProductResponse()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Description = x.Description,
+                        Price = x.Price,
+                        Quantity = x.Quantity,
+                        CategoryId = x.CategoryId,
+                    };
+                }
+                ).ToList();
+            return result;
         }
 
         public async Task<UpdateProductResponse> UpdateProduct(Guid id, UpdateProductRequest request)

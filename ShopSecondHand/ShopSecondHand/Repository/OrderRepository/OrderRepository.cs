@@ -30,7 +30,7 @@ namespace ShopSecondHand.Repository.OrderRepository
             {
                 order.Id = Guid.NewGuid();
                 order.PostId = request.PostId;
-                order.UserId = request.UserId;
+                order.AccountId = request.AccountId;
                 order.Total = request.Total;
             };
             dbContext.Orders.AddAsync(order);
@@ -39,7 +39,7 @@ namespace ShopSecondHand.Repository.OrderRepository
             return re;
         }
 
-        public async void DeleteBuilding(Guid id)
+        public async void Delete(Guid id)
         {
             var deBuilding = dbContext.Orders
                 .SingleOrDefaultAsync(p => p.Id == id);
@@ -61,7 +61,7 @@ namespace ShopSecondHand.Repository.OrderRepository
                    {
                        Id = x.Id,
                        PostId = x.PostId,
-                       UserId = x.UserId,
+                       AccountId = x.AccountId,
                        Total = x.Total,
                    };
                }
@@ -80,7 +80,7 @@ namespace ShopSecondHand.Repository.OrderRepository
                 {
                     Id=getById.Id,
                     PostId = getById.PostId,
-                    UserId = getById.UserId,
+                    AccountId = getById.AccountId,
                     Total = getById.Total,
                 };
                 return re;
@@ -105,8 +105,9 @@ namespace ShopSecondHand.Repository.OrderRepository
                 {
                     return new GetOrderResponse()
                     {
+                        Id = x.Id,
                         PostId = x.PostId,
-                        UserId = x.UserId,
+                        AccountId = x.AccountId,
                         Total = x.Total,
                     };
                 }
@@ -117,7 +118,7 @@ namespace ShopSecondHand.Repository.OrderRepository
         public async Task<IEnumerable<GetOrderResponse>> GetOrderByUserId(Guid id)
         {
             var getByPostId = await dbContext.Orders
-                .FirstOrDefaultAsync(p => p.UserId == id);
+                .FirstOrDefaultAsync(p => p.AccountId == id);
             //Guid idBuilding;
             if (getByPostId == null)
                 return null;
@@ -131,8 +132,9 @@ namespace ShopSecondHand.Repository.OrderRepository
                 {
                     return new GetOrderResponse()
                     {
+                        Id=x.Id,
                         PostId = x.PostId,
-                        UserId = x.UserId,
+                        AccountId = x.AccountId,
                         Total = x.Total,
                     };
                 }
@@ -146,8 +148,8 @@ namespace ShopSecondHand.Repository.OrderRepository
             if (id != request.Id) return null;
             if (up == null) return null;
 
-            up.UserId = request.UserId;
-            up.PostId = request.PostId;
+            //up.AccountId = request.AccountId;
+            //up.PostId = request.PostId;
             up.Total = request.Total;
             dbContext.Orders.Update(up);
             await dbContext.SaveChangesAsync();

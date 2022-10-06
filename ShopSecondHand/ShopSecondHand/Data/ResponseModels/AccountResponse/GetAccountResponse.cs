@@ -1,11 +1,12 @@
 ﻿using System;
 
-namespace ShopSecondHand.Data.ResponseModels.UserResponse
+namespace ShopSecondHand.Data.ResponseModels.AccountResponse
 {
-    public class UpdateUserResponse
+    public class GetAccountResponse
     {
+        public Guid Id { get; set; }
         public string UserName { get; set; }
-        public string Password { get; set; }
+       // public string Password { get; set; }
         public string FullName { get; set; }
         public string Description { get; set; }
         public string Phone { get; set; }

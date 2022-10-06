@@ -1,18 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CoreApiResponse;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShopSecondHand.Data.RequestModels.OrderDetailRequest;
 using ShopSecondHand.Data.ResponseModels.OrderDetailResponse;
-using ShopSecondHand.Data.ResponseModels.OrderResponse;
 using ShopSecondHand.Repository.OrderDetailRepository;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace ShopSecondHand.Controllers
 {
     [Route("api/orderdetails")]
     [ApiController]
-    public class OrderDetailController : ControllerBase
+    public class OrderDetailController : BaseController
     {
         private readonly IOrderDetailRepository orderDetailRepository;
         public OrderDetailController(IOrderDetailRepository orderDetailRepository)
@@ -20,102 +21,99 @@ namespace ShopSecondHand.Controllers
             this.orderDetailRepository = orderDetailRepository;
         }
         [HttpGet]
-        public async Task<ActionResult> GetOrderDetail()
+        public async Task<IActionResult> GetOrderDetail()
         {
             try
             {
-                return Ok(await orderDetailRepository.GetOrderDetail());
+                var result = await orderDetailRepository.GetOrderDetail();
+                if (result == null)
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
+                return CustomResult("thanh cong", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retrieving data from the database.");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetOrderDetailById(Guid id)
+        public async Task<IActionResult> GetOrderDetailById(Guid id)
         {
             try
             {
                 var result = await orderDetailRepository.GetOrderDetailById(id);
                 if (result == null)
-                {
-                    return NotFound();
-                }
-                return Ok(result);
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
+                return CustomResult("thanh cong", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retrieving data from the database.");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
 
             }
         }
         [HttpGet("orders")]
-        public async Task<ActionResult> GetOrderDetailByOrderId(Guid id)
+        public async Task<IActionResult> GetOrderDetailByOrderId(Guid id)
         {
             try
             {
                 var result = await orderDetailRepository.GetOrderDetailByOrderId(id);
                 if (result == null)
-                {
-                    return NotFound();
-                }
-                return Ok(result);
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
+                return CustomResult("thanh cong", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retrieving data from the database.");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
 
             }
         }
         [HttpPost]
-        public async Task<ActionResult> CreateOrder(CreateOrderDetailRequest request)
+        public async Task<IActionResult> CreateOrder(CreateOrderDetailRequest request)
         {
             try
             {
                 if (request == null)
                 {
-                    return BadRequest();
+                    return CustomResult("Cu Phap Sai", HttpStatusCode.BadRequest);
                 }
                 var create = await orderDetailRepository.CreateOrderDetail(request);
                 if (create == null)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError,
-                  "Order da ton tai.");
+                    return CustomResult("Order da ton tai", HttpStatusCode.Accepted);
                 }
-                return Ok(create);
+                return CustomResult("thanh cong", create, HttpStatusCode.Created);
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                   e.Message);
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateOrderDetail(Guid id, UpdateOrderDetailRequest request)
+        public async Task<IActionResult> UpdateOrderDetail(Guid id, UpdateOrderDetailRequest request)
         {
             try
             {
+                if (request == null)
+                {
+                    return CustomResult("Cu Phap Sai", HttpStatusCode.BadRequest);
+                }
                 var update = await orderDetailRepository.UpdateOrderDetail(id, request);
 
                 if (update == null)
                 {
-                    return NotFound();
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
 
-                return Ok(update);
+                return CustomResult("thanh cong", update, HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error updating Store!");
-            }
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
 
+            }
         }
         [HttpDelete("{id}")]
-        public void DeleteOrderDetail(Guid id)
+        public IActionResult DeleteOrderDetail(Guid id)
         {
             try
             {
@@ -123,17 +121,14 @@ namespace ShopSecondHand.Controllers
 
                 if (delete == null)
                 {
-                    StatusCode(StatusCodes.Status500InternalServerError,
-                   "Error retrieving data from the database.");
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
                 orderDetailRepository.DeleteOrderDetail(id);
-                StatusCode(StatusCodes.Status500InternalServerError,
-                   "Error Suc!");
+                return CustomResult("thanh cong", HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error deleting!");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
     }

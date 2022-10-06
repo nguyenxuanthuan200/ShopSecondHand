@@ -14,12 +14,15 @@ using ShopSecondHand.Repository.CategoryRepository;
 using ShopSecondHand.Repository.OrderDetailRepository;
 using ShopSecondHand.Repository.OrderRepository;
 using ShopSecondHand.Repository.ProductRepository;
-using ShopSecondHand.Repository.UserRepository;
+using ShopSecondHand.Repository.AccountRepository;
+using ShopSecondHand.Service;
+using ShopSecondHand.Service.IService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using VoiceAPI.Configure;
 
 namespace ShopSecondHand
 {
@@ -40,20 +43,43 @@ namespace ShopSecondHand
             options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
 
             services.AddScoped<IBuildingRepository, BuildingRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IAccountService, AccountService>();
+
+
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+
             services.AddScoped<IOrderRepository, OrderRepository>();
+
             services.AddScoped<IProductRepository, ProductRepository>();
+
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 
 
+            // Cors
+            services.AddCors(opt => opt.AddDefaultPolicy(builder => builder.AllowAnyOrigin()
+                                                                           .AllowAnyMethod()
+                                                                           .AllowAnyHeader()));
             //services.AddCors();
             //services.AddControllersWithViews()
             //    .AddNewtonsoftJson()
             //    .AddXmlDataContractSerializerFormatters();
 
+            // Compression
+            services.AddResponseCompression();
             // Add auto mapper
-            services.AddAutoMapper(typeof(Program).Assembly);
+            //services.AddAutoMapper(typeof(Program).Assembly);
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // Config
+            services.Configure<JwtConfig>(Configuration.GetSection("Jwt"));
+            // Disable ModelStateInvalidFilter
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
 
             services.AddControllers()
                .AddJsonOptions(x =>

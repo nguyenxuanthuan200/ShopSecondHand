@@ -7,6 +7,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="CoreApiResponse" Version="1.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.15">
       <PrivateAssets>all</PrivateAssets>
@@ -26,7 +28,6 @@
     <Folder Include="Data\RequestModels\TransactionRequest\" />
     <Folder Include="Data\RequestModels\RoleRequest\" />
     <Folder Include="Data\RequestModels\PostRequest\" />
-    <Folder Include="Data\RequestModels\PaymentRequest\" />
   </ItemGroup>
 
 </Project>

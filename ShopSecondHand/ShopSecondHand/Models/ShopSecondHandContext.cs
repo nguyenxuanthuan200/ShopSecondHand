@@ -17,6 +17,7 @@ namespace ShopSecondHand.Models
         {
         }
 
+        public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Building> Buildings { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
@@ -27,7 +28,6 @@ namespace ShopSecondHand.Models
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Wallet> Wallets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -42,6 +42,49 @@ namespace ShopSecondHand.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<Account>(entity =>
+            {
+                entity.ToTable("Account");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.BuildingId).HasColumnName("BuildingID");
+
+                entity.Property(e => e.Description).HasMaxLength(255);
+
+                entity.Property(e => e.FullName).HasMaxLength(50);
+
+                entity.Property(e => e.Gender).HasMaxLength(50);
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Phone)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RoleId).HasColumnName("RoleID");
+
+                entity.Property(e => e.UserName)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.HasOne(d => d.Building)
+                    .WithMany(p => p.Accounts)
+                    .HasForeignKey(d => d.BuildingId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Building");
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.Accounts)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Role");
+            });
 
             modelBuilder.Entity<Building>(entity =>
             {
@@ -82,11 +125,6 @@ namespace ShopSecondHand.Models
                 entity.Property(e => e.SenderId).HasColumnName("SenderID");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Messages)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Message_User");
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -99,16 +137,16 @@ namespace ShopSecondHand.Models
 
                 entity.Property(e => e.PostId).HasColumnName("PostID");
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.AccountId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.PostId)
                     .HasConstraintName("FK_Order_Post");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Account)
                     .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.AccountId)
                     .HasConstraintName("FK_Order_User");
             });
 
@@ -171,16 +209,22 @@ namespace ShopSecondHand.Models
 
                 entity.Property(e => e.Title).HasMaxLength(50);
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.AccountId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.Building)
                     .WithMany(p => p.Posts)
                     .HasForeignKey(d => d.BuildingId)
-                    .HasConstraintName("FK_Post_Building");
+                    .HasConstraintName("FK_Post_Building1");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.IdNavigation)
+                    .WithOne(p => p.Post)
+                    .HasForeignKey<Post>(d => d.Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Post_Product");
+
+                entity.HasOne(d => d.Account)
                     .WithMany(p => p.Posts)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.AccountId)
                     .HasConstraintName("FK_Post_User");
             });
 
@@ -240,43 +284,6 @@ namespace ShopSecondHand.Models
                     .HasConstraintName("FK_Transaction_Wallet");
             });
 
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.ToTable("User");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ID");
-
-                entity.Property(e => e.BuildingId).HasColumnName("BuildingID");
-
-                entity.Property(e => e.Description).HasMaxLength(255);
-
-                entity.Property(e => e.FullName).HasMaxLength(50);
-
-                entity.Property(e => e.Gender).HasMaxLength(50);
-
-                entity.Property(e => e.Password).HasMaxLength(50);
-
-                entity.Property(e => e.Phone)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.RoleId).HasColumnName("RoleID");
-
-                entity.Property(e => e.UserName).HasMaxLength(50);
-
-                entity.HasOne(d => d.Building)
-                    .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.BuildingId)
-                    .HasConstraintName("FK_User_Building");
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK_User_Role");
-            });
-
             modelBuilder.Entity<Wallet>(entity =>
             {
                 entity.ToTable("Wallet");
@@ -285,11 +292,10 @@ namespace ShopSecondHand.Models
                     .ValueGeneratedNever()
                     .HasColumnName("ID");
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Wallets)
-                    .HasForeignKey(d => d.UserId)
+                entity.HasOne(d => d.IdNavigation)
+                    .WithOne(p => p.Wallet)
+                    .HasForeignKey<Wallet>(d => d.Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Wallet_User");
             });
 

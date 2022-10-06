@@ -64,3 +64,7 @@ C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Micro
 C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Microsoft.Extensions.Options.dll
 C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Microsoft.Extensions.Primitives.dll
 C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\System.Runtime.CompilerServices.Unsafe.dll
+C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\BCrypt.Net-Next.dll
+C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\CoreApiResponse.dll
+C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll

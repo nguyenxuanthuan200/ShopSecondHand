@@ -14,9 +14,8 @@ namespace ShopSecondHand.Models
 
         public Guid Id { get; set; }
         public double? Balance { get; set; }
-        public Guid? UserId { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual Account IdNavigation { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

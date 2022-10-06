@@ -1,16 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CoreApiResponse;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShopSecondHand.Data.RequestModels.ProductRequest;
 using ShopSecondHand.Data.ResponseModels.ProductResponse;
 using ShopSecondHand.Repository.ProductRepository;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace ShopSecondHand.Controllers
 {
     [Route("api/products")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductController : BaseController
     {
         private readonly IProductRepository productRepository;
         public ProductController(IProductRepository productRepository)
@@ -18,121 +20,138 @@ namespace ShopSecondHand.Controllers
             this.productRepository = productRepository;
         }
         [HttpGet]
-        public async Task<ActionResult> GetProduct()
+        public async Task<IActionResult> GetProduct()
         {
             try
             {
-                return Ok(await productRepository.GetProduct());
+                var result = await productRepository.GetProduct();
+                if (result == null)
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
+                return CustomResult("thanh cong", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retrieving data from the database.");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetProductById(Guid id)
+        public async Task<IActionResult> GetProductById(Guid id)
         {
             try
             {
                 var result = await productRepository.GetProductById(id);
                 if (result == null)
                 {
-                    return NotFound();
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
-                return Ok(result);
+                return CustomResult("thanh cong", result, System.Net.HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retrieving data from the database.");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
 
             }
         }
         [HttpGet("search")]
-        public async Task<ActionResult> GetProductByName(string name)
+        public async Task<IActionResult> GetProductByName(string name)
         {
             try
             {
                 var result = await productRepository.GetProductByName(name);
                 if (result == null)
                 {
-                    return NotFound();
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
-                return Ok(result);
+                return CustomResult("thanh cong", result, System.Net.HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retrieving data from the database.");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
+
+            }
+        }
+        [HttpGet("categorys")]
+        public async Task<IActionResult> GetProductByCategoryId(Guid id)
+        {
+            try
+            {
+                var result = await productRepository.GetProductByCategoryId(id);
+                if (result == null)
+                {
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
+                }
+                return CustomResult("thanh cong", result, System.Net.HttpStatusCode.OK);
+            }
+            catch (Exception)
+            {
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
 
             }
         }
         [HttpPost]
-        public async Task<ActionResult> CreateProduct(CreateProductRequest request)
+        public async Task<IActionResult> CreateProduct(CreateProductRequest request)
         {
             try
             {
                 if (request == null)
                 {
-                    return BadRequest();
+                    return CustomResult("Cu Phap Sai", HttpStatusCode.BadRequest);
                 }
                 var create = await productRepository.CreateProduct(request);
                 if (create == null)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError,
-                  "UserName da ton tai.");
+                    return CustomResult("Order da ton tai", HttpStatusCode.Accepted);
                 }
-                return Ok(create);
+                return CustomResult("thanh cong", create, HttpStatusCode.Created);
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                   e.Message);
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateProduct(Guid id, UpdateProductRequest request)
+        public async Task<IActionResult> UpdateProduct(Guid id, UpdateProductRequest request)
         {
             try
             {
+                if (request == null)
+                {
+                    return CustomResult("Cu Phap Sai", HttpStatusCode.BadRequest);
+                }
                 var update = await productRepository.UpdateProduct(id, request);
+
 
                 if (update == null)
                 {
-                    return NotFound();
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
 
-                return Ok(update);
+                return CustomResult("thanh cong", update, HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error updating Store!");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
 
         }
         [HttpDelete("{id}")]
-        public void DeleteProduct(Guid id)
+        public IActionResult DeleteProduct(Guid id)
         {
             try
             {
                 var delete = productRepository.GetProductById(id);
 
+
                 if (delete == null)
                 {
-                    StatusCode(StatusCodes.Status500InternalServerError,
-                   "Error retrieving data from the database.");
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
                 productRepository.DeleteProduct(id);
-                //Ok();
-                StatusCode(StatusCodes.Status200OK,
-                   "Delete Success.");
+                return CustomResult("thanh cong", HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error deleting!");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
     }

@@ -1,16 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CoreApiResponse;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShopSecondHand.Data.RequestModels.CategoryRequest;
 using ShopSecondHand.Data.ResponseModels.CategoryResponse;
 using ShopSecondHand.Models;
 using ShopSecondHand.Repository.CategoryRepository;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 namespace ShopSecondHand.Controllers
 {
     [Route("api/categorys")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class CategoryController : BaseController
     {
         private readonly ICategoryRepository categoryRepository;
         public CategoryController(ICategoryRepository categoryRepository)
@@ -18,118 +20,100 @@ namespace ShopSecondHand.Controllers
             this.categoryRepository = categoryRepository;
         }
         [HttpGet]
-        public async Task<ActionResult> GetCategory()
+        public async Task<IActionResult> GetCategory()
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-                return Ok(await categoryRepository.GetCategory());
+               
+                var result =await categoryRepository.GetCategory();
+                if (result == null)
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
+                return CustomResult("thanh cong", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retrieving data from the database.");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
         [HttpGet("search")]
-        public async Task<ActionResult> GetCategoryByName(string name)
+        public async Task<IActionResult> GetCategoryByName(string name)
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
                 var result = await categoryRepository.GetCategoryByName(name);
                 if (result == null)
-                {
-                    return NotFound();
-                }
-                return Ok(result);
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
+                return CustomResult("thanh cong", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retrieving data from the database.");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
 
             }
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetCategoryById(Guid id)
+        public async Task<IActionResult> GetCategoryById(Guid id)
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
                 var result = await categoryRepository.GetCategoryById(id);
                 if (result == null)
-                {
-                    return NotFound();
-                }
-                return Ok(result);
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
+                return CustomResult("thanh cong", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retrieving data from the database.");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
 
             }
         }
         [HttpPost]
-        public async Task<ActionResult> CreateCategory(CreateCategoryRequest request)
+        public async Task<IActionResult> CreateCategory(CreateCategoryRequest request)
         {
             try
             {
                 if (request == null)
                 {
-                    return BadRequest();
+                    return CustomResult("Cu Phap Sai", HttpStatusCode.BadRequest);
                 }
                 var create = await categoryRepository.CreateCategory(request);
                 if (create == null)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError,
-                  "Category da ton tai.");
+                    return CustomResult("Category da ton tai", HttpStatusCode.Accepted);
                 }
-                return Ok(create);
+                return CustomResult("thanh cong", create,HttpStatusCode.Created);
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                   e.Message);
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCategory(Guid id,UpdateCategoryRequest request)
+        public async Task<IActionResult> UpdateCategory(Guid id,UpdateCategoryRequest request)
         {
             try
             {
-                if (!ModelState.IsValid)
+                if (request == null)
                 {
-                    return BadRequest(ModelState);
+                    return CustomResult("Cu Phap Sai", HttpStatusCode.BadRequest);
                 }
                 var update = await categoryRepository.UpdateCategory(id, request);
 
                 if (update == null)
                 {
-                    return NotFound();
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
 
-                return Ok(update);
+                return CustomResult("thanh cong", update, System.Net.HttpStatusCode.OK);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error updating Store!");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
 
         }
         [HttpDelete("{id}")]
-        public void DeleteCategory(Guid id)
+        public IActionResult DeleteCategory(Guid id)
         {
             try
             {
@@ -138,20 +122,15 @@ namespace ShopSecondHand.Controllers
 
                 if (delete == null)
                 {
-                    StatusCode(StatusCodes.Status500InternalServerError,
-                   "Error retrieving data from the database.");
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
-                else
-                {
                     categoryRepository.DeleteCategory(id);
-                    StatusCode(StatusCodes.Status200OK,
-                   "Delete Success.");
-                }
+                    return CustomResult("thanh cong", System.Net.HttpStatusCode.OK);
+                
             }
             catch (Exception)
             {
-                StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error deleting!");
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
     }
