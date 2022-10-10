@@ -68,3 +68,9 @@ C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\BCryp
 C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\CoreApiResponse.dll
 C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Microsoft.DotNet.PlatformAbstractions.dll
 C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
+C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Npgsql.dll
+C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Study\SWD\ShopSecondHand\ShopSecondHand\ShopSecondHand\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll

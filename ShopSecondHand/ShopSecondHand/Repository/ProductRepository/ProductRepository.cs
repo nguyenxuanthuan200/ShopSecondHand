@@ -22,10 +22,10 @@ namespace ShopSecondHand.Repository.ProductRepository
         }
         public async Task<CreateProductResponse> CreateProduct(CreateProductRequest request)
         {
-            var create = await dbContext.Products
-                  .SingleOrDefaultAsync(p => p.Name.Equals(request.Name));
-            if (create != null)
-                return null;
+            //var create = await dbContext.Products
+            //      .SingleOrDefaultAsync(p => p.Name.Equals(request.Name));
+            //if (create != null)
+            //    return null;
             Product a = new Product();
             {
                 a.Id = Guid.NewGuid();
@@ -45,10 +45,10 @@ namespace ShopSecondHand.Repository.ProductRepository
         {
             var deBuilding = dbContext.Products
                 .SingleOrDefault(p => p.Id == id);
-            if (deBuilding == null)
-            {
-                // throw new Exception("This Building is unavailable!");
-            }
+            //if (deBuilding == null)
+            //{
+            //    // throw new Exception("This Building is unavailable!");
+            //}
             dbContext.Products.Remove(deBuilding);
             dbContext.SaveChangesAsync();
         }

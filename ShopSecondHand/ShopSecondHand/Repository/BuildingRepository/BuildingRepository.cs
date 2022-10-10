@@ -43,13 +43,8 @@ namespace ShopSecondHand.Repository.BuildingRepository
         {
             var deBuilding = dbContext.Buildings
                 .SingleOrDefault(p => p.Id == id);
-            if (deBuilding == null)
-            {
-                // throw new Exception("This Building is unavailable!");
-
-            }
             dbContext.Buildings.Remove(deBuilding);
-            dbContext.SaveChangesAsync();
+            dbContext.SaveChanges();
 
         }
         public async Task<IEnumerable<GetBuildingResponse>> GetBuilding()

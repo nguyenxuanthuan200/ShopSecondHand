@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using ShopSecondHand.Data.ResponseModels.AccountResponse;
-using ShopSecondHand.Models;
-using VoiceAPI.Models.Responses.Auths;
+using ShopSecondHand.Data.ResponseModels.Auths;
 
 namespace ShopSecondHand.Profiles
 {
@@ -9,18 +7,18 @@ namespace ShopSecondHand.Profiles
     {
         public AccountProfile()
         {
-            //CreateMap<Models.User, Data.ResponseModels.UserResponse.GetUserResponse>().ReverseMap();
-            //CreateMap<Models.User, Data.ResponseModels.UserResponse.CreateUserResponse>().ReverseMap();
-            //CreateMap<Models.User, Data.ResponseModels.UserResponse.UpdateUserResponse>().ReverseMap();
+            CreateMap<Models.Account, Data.ResponseModels.AccountResponse.GetAccountResponse>().ReverseMap();
+            CreateMap<Models.Account, Data.ResponseModels.AccountResponse.CreateAccountResponse>().ReverseMap();
+            CreateMap<Models.Account, Data.ResponseModels.AccountResponse.UpdateAccountResponse>().ReverseMap();
 
-            CreateMap<Account, CreateAccountResponse>().ReverseMap();
-            CreateMap<Account, UpdateAccountResponse>().ReverseMap();
+            //CreateMap<Account, CreateAccountResponse>().ReverseMap();
+            //CreateMap<Account, UpdateAccountResponse>().ReverseMap();
 
-            CreateMap<Account, GetAccountResponse>().ReverseMap();
+            //CreateMap<Account, GetAccountResponse>().ReverseMap();
 
-            CreateMap<Account, JwtTokenDTO>().ReverseMap();
+            CreateMap<Models.Account, JwtTokenDTO>().ReverseMap();
 
-            CreateMap<Account, AccountWithWalletDTO>().ReverseMap();
+            CreateMap<Models.Account, Data.ResponseModels.AccountResponse.AccountWithWalletDTO>().ReverseMap();
         }
 
     }

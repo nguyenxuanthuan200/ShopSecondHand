@@ -1,4 +1,5 @@
 ﻿using CoreApiResponse;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShopSecondHand.Data.RequestModels.CategoryRequest;
@@ -24,11 +25,11 @@ namespace ShopSecondHand.Controllers
         {
             try
             {
-               
-                var result =await categoryRepository.GetCategory();
+
+                var result = await categoryRepository.GetCategory();
                 if (result == null)
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
-                return CustomResult("thanh cong", result, HttpStatusCode.OK);
+                return CustomResult("Success", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -43,7 +44,7 @@ namespace ShopSecondHand.Controllers
                 var result = await categoryRepository.GetCategoryByName(name);
                 if (result == null)
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
-                return CustomResult("thanh cong", result, HttpStatusCode.OK);
+                return CustomResult("Success", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -59,7 +60,7 @@ namespace ShopSecondHand.Controllers
                 var result = await categoryRepository.GetCategoryById(id);
                 if (result == null)
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
-                return CustomResult("thanh cong", result, HttpStatusCode.OK);
+                return CustomResult("Success", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -67,6 +68,7 @@ namespace ShopSecondHand.Controllers
 
             }
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateCategory(CreateCategoryRequest request)
         {
@@ -81,19 +83,20 @@ namespace ShopSecondHand.Controllers
                 {
                     return CustomResult("Category da ton tai", HttpStatusCode.Accepted);
                 }
-                return CustomResult("thanh cong", create,HttpStatusCode.Created);
+                return CustomResult("Success", create, HttpStatusCode.Created);
             }
             catch (Exception e)
             {
                 return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(Guid id,UpdateCategoryRequest request)
+        public async Task<IActionResult> UpdateCategory(Guid id, UpdateCategoryRequest request)
         {
             try
             {
-                if (request == null)
+                if (request == null || id != request.Id)
                 {
                     return CustomResult("Cu Phap Sai", HttpStatusCode.BadRequest);
                 }
@@ -104,7 +107,7 @@ namespace ShopSecondHand.Controllers
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
 
-                return CustomResult("thanh cong", update, System.Net.HttpStatusCode.OK);
+                return CustomResult("Success", update, HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -112,21 +115,20 @@ namespace ShopSecondHand.Controllers
             }
 
         }
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult DeleteCategory(Guid id)
         {
             try
             {
-
                 var delete = categoryRepository.GetCategoryById(id);
-
+                //var delete = categoryRepository.GetCategoryById(id);
                 if (delete == null)
                 {
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
-                    categoryRepository.DeleteCategory(id);
-                    return CustomResult("thanh cong", System.Net.HttpStatusCode.OK);
-                
+                categoryRepository.DeleteCategory(id);
+                return CustomResult("Success", HttpStatusCode.OK);
             }
             catch (Exception)
             {

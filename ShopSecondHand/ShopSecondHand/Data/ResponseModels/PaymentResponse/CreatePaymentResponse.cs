@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ShopSecondHand.Data.RequestModels.PaymentRequest
+namespace ShopSecondHand.Data.ResponseModels.PaymentResponse
 {
-    public class CreatePaymentRequest
+    public class CreatePaymentResponse
     {
         public Guid? OrderId { get; set; }
         public TimeSpan? PaymentTime { get; set; }

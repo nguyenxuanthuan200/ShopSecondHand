@@ -27,7 +27,7 @@ namespace ShopSecondHand.Controllers
                 var result = await productRepository.GetProduct();
                 if (result == null)
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
-                return CustomResult("thanh cong", result, HttpStatusCode.OK);
+                return CustomResult("Success", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -44,7 +44,7 @@ namespace ShopSecondHand.Controllers
                 {
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
-                return CustomResult("thanh cong", result, System.Net.HttpStatusCode.OK);
+                return CustomResult("Success", result, System.Net.HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -62,7 +62,7 @@ namespace ShopSecondHand.Controllers
                 {
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
-                return CustomResult("thanh cong", result, System.Net.HttpStatusCode.OK);
+                return CustomResult("Success", result, System.Net.HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -80,7 +80,7 @@ namespace ShopSecondHand.Controllers
                 {
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
-                return CustomResult("thanh cong", result, System.Net.HttpStatusCode.OK);
+                return CustomResult("Success", result, System.Net.HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -102,7 +102,7 @@ namespace ShopSecondHand.Controllers
                 {
                     return CustomResult("Order da ton tai", HttpStatusCode.Accepted);
                 }
-                return CustomResult("thanh cong", create, HttpStatusCode.Created);
+                return CustomResult("Success", create, HttpStatusCode.Created);
             }
             catch (Exception e)
             {
@@ -126,7 +126,7 @@ namespace ShopSecondHand.Controllers
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
 
-                return CustomResult("thanh cong", update, HttpStatusCode.OK);
+                return CustomResult("Success", update, HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -147,7 +147,7 @@ namespace ShopSecondHand.Controllers
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
                 productRepository.DeleteProduct(id);
-                return CustomResult("thanh cong", HttpStatusCode.OK);
+                return CustomResult("Success", HttpStatusCode.OK);
             }
             catch (Exception)
             {

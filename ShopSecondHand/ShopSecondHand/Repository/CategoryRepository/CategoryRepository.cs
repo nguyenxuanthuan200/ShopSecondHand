@@ -39,15 +39,14 @@ namespace ShopSecondHand.Repository.CategoryRepository
             return re;
         }
 
-        public async void DeleteCategory(Guid id)
+        public void DeleteCategory(Guid id)
         {
             var deCate = dbContext.Categories
                .SingleOrDefault(p => p.Id == id);
-            if (deCate != null)
-            {
-                dbContext.Categories.Remove(deCate);
-                dbContext.SaveChangesAsync();
-            }
+
+            dbContext.Categories.Remove(deCate);
+            dbContext.SaveChanges();
+
         }
 
         public async Task<IEnumerable<GetCategoryResponse>> GetCategory()
@@ -58,6 +57,7 @@ namespace ShopSecondHand.Repository.CategoryRepository
                 {
                     return new GetCategoryResponse()
                     {
+                        Id = x.Id,
                         Name = x.Name
                     };
                 }
@@ -69,27 +69,28 @@ namespace ShopSecondHand.Repository.CategoryRepository
         {
             var getById = await dbContext.Categories
 
-               .FirstOrDefaultAsync(p => p.Id == id);
-            if (getById != null)
+               .SingleOrDefaultAsync(p => p.Id == id);
+            if (getById == null) return null;
+
+            var re = new GetCategoryResponse()
             {
-                var re = new GetCategoryResponse()
-                {
-                    Name = getById.Name
-                };
-                return re;
-            }
-            return null;
+                Id = getById.Id,
+                Name = getById.Name
+            };
+            return re;
         }
+
 
         public async Task<GetCategoryResponse> GetCategoryByName(string name)
         {
             var getById = await dbContext.Categories
 
-             .FirstOrDefaultAsync(p => p.Equals(name));
+             .FirstOrDefaultAsync(p => p.Name.Equals(name));
             if (getById != null)
             {
                 var re = new GetCategoryResponse()
                 {
+                    Id = getById.Id,
                     Name = getById.Name
                 };
                 return re;

@@ -155,7 +155,7 @@ namespace ShopSecondHand.Service
 
         public async Task<GenericResult<List<GetAccountResponse>>> GetUserByBuildingId(Guid id)
         {
-            var targeUser = await _userRepository.GetUserByBuildingId(id);
+            var targeUser = await _userRepository.GetAccountByBuildingId(id);
 
            // var response = _mapper.Map<GetUserResponse>(targetVoiceDemos);
 

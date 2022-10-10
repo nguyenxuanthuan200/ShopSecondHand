@@ -1,4 +1,5 @@
 ﻿using CoreApiResponse;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShopSecondHand.Data.RequestModels.BuildingRequest;
@@ -11,6 +12,7 @@ namespace ShopSecondHand.Controllers
 {
     [Route("api/buildings")]
     [ApiController]
+   
     public class BuildingController : BaseController
     {
         private readonly IBuildingRepository buildingRepository;
@@ -26,7 +28,7 @@ namespace ShopSecondHand.Controllers
                 var result = await buildingRepository.GetBuilding();
                 if (result == null)
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
-                return CustomResult("thanh cong", result, HttpStatusCode.OK);
+                return CustomResult("Success", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -42,7 +44,7 @@ namespace ShopSecondHand.Controllers
                 var result = await buildingRepository.GetBuildingByName(name);
                 if (result == null)
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
-                return CustomResult("thanh cong", result, HttpStatusCode.OK);
+                return CustomResult("Success", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -59,7 +61,7 @@ namespace ShopSecondHand.Controllers
                 var result = await buildingRepository.GetBuildingById(id);
                 if (result == null)
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
-                return CustomResult("thanh cong", result, HttpStatusCode.OK);
+                return CustomResult("Success", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -68,6 +70,7 @@ namespace ShopSecondHand.Controllers
 
             }
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateBuilding(CreateBuildingRequest request)
         {
@@ -82,7 +85,7 @@ namespace ShopSecondHand.Controllers
                 {
                     return CustomResult("Building da ton tai", HttpStatusCode.Accepted);
                 }
-                return CustomResult("thanh cong", create, HttpStatusCode.Created);
+                return CustomResult("Success", create, HttpStatusCode.Created);
             }
             catch (Exception e)
             {
@@ -90,6 +93,8 @@ namespace ShopSecondHand.Controllers
                    e.Message);
             }
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBuilding(Guid id, UpdateBuildingRequest request)
         {
@@ -106,7 +111,7 @@ namespace ShopSecondHand.Controllers
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
 
-                return CustomResult("thanh cong", update, HttpStatusCode.OK);
+                return CustomResult("Success", update, HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -115,6 +120,7 @@ namespace ShopSecondHand.Controllers
             }
 
         }
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
@@ -126,7 +132,7 @@ namespace ShopSecondHand.Controllers
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
                 buildingRepository.DeleteBuilding(id);
-                return CustomResult("thanh cong", HttpStatusCode.OK);
+                return CustomResult("Success", HttpStatusCode.OK);
             }
             catch (Exception)
             {

@@ -9,15 +9,16 @@ namespace ShopSecondHand.Repository.AccountRepository
 {
     public interface IAccountRepository : IBaseRepository<Account>
     {
-       // Task<IEnumerable<GetAccountResponse>> GetUser();
-       // Task<GetAccountResponse> GetUserById(Guid id);
-       //// Task<GetAccountResponse> GetUserByUserName(string name);
-       // //Task<IEnumerable<GetUserResponse>> GetUserByBuildingName(string name);
-       // Task<CreateAccountResponse> CreateUser(CreateAccountRequest userRequest);
-       // Task<UpdateAccountResponse> UpdateUser(Guid id, UpdateAccountRequest userRequest);
-       // void DeleteUser(Guid id);
-
+        Task<IEnumerable<GetAccountResponse>> GetAccount();
+        Task<Account> CreateAccountWithWallet(CreateAccountRequest userRequest);
+        Task<CreateAccountResponse> CreateAccount(CreateAccountRequest userRequest);
+        Task<Account> UpdateAccount(Guid id, UpdateAccountRequest request);
+        void DeleteAccount(Guid id);
+        Task<AccountWithWalletDTO> GetAccountWithWallet(Guid id);
+        Task<GetAccountResponse> GetAccountById(Guid id);
         Task<Account> GetByUserNameAndPassword(string userName, string password);
-        Task<List<Account>> GetUserByBuildingId(Guid id);
+        // Task<List<Account>> GetAccountByBuildingId(Guid id);
+        Task<IEnumerable<GetAccountResponse>> GetAccountByBuildingId(Guid id);
+
     }
 }
