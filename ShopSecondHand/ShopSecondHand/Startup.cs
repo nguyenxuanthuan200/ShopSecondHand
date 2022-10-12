@@ -15,8 +15,6 @@ using ShopSecondHand.Repository.OrderDetailRepository;
 using ShopSecondHand.Repository.OrderRepository;
 using ShopSecondHand.Repository.ProductRepository;
 using ShopSecondHand.Repository.AccountRepository;
-using ShopSecondHand.Service;
-using ShopSecondHand.Service.IService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +24,7 @@ using VoiceAPI.Configure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ShopSecondHand.Repository.AuthenRepository;
 
 namespace ShopSecondHand
 {
@@ -48,7 +47,7 @@ namespace ShopSecondHand
             services.AddScoped<IBuildingRepository, BuildingRepository>();
 
             services.AddScoped<IAccountRepository, AccountRepository>();
-            services.AddScoped<IAccountService, AccountService>();
+           // services.AddScoped<IAccountService, AccountService>();
 
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -58,6 +57,8 @@ namespace ShopSecondHand
             services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+
+            services.AddScoped<IAuthenRepository, AuthenRepository>();
 
 
             // Cors
@@ -112,10 +113,16 @@ namespace ShopSecondHand
                    options.SaveToken = true;
                    options.TokenValidationParameters = new TokenValidationParameters()
                    {
-                       ValidateIssuer = true,
-                       ValidateAudience = true,
-                       ValidAudience = Configuration["Jwt:Audience"],
-                       ValidIssuer = Configuration["Jwt:Issuer"],
+                       //ValidateIssuer = true,
+                       //ValidateAudience = true,
+                       //ValidAudience = Configuration["Jwt:Audience"],
+                       //ValidIssuer = Configuration["Jwt:Issuer"],
+                       //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                       ValidateIssuerSigningKey = true,
+                       ValidateLifetime = true,
+                       ValidateIssuer = false,
+                       ValidateAudience = false,
+                       RequireExpirationTime = true,
                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                    };
                });
@@ -130,7 +137,7 @@ namespace ShopSecondHand
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+                    Description = "JWT Authorization header using the Bearer scheme.",
                 });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement {
                 {
@@ -157,7 +164,7 @@ namespace ShopSecondHand
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

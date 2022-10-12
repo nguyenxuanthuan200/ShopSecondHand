@@ -7,7 +7,6 @@ using ShopSecondHand.Data.Common;
 using ShopSecondHand.Data.RequestModels.AccountRequest;
 using ShopSecondHand.Data.ResponseModels.AccountResponse;
 using ShopSecondHand.Repository.AccountRepository;
-using ShopSecondHand.Service.IService;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -19,12 +18,10 @@ namespace ShopSecondHand.Controllers
     public class AccountController : BaseController
     {
         private readonly IAccountRepository accountRepository;
-        private readonly IMapper _mapper;
-        public AccountController(IAccountRepository accountRepository, IMapper mapper)
+        public AccountController(IAccountRepository accountRepository)
         {
             {
                 this.accountRepository = accountRepository;
-                _mapper = mapper;
             }
 
         }
@@ -79,8 +76,8 @@ namespace ShopSecondHand.Controllers
                 {
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
-                var result = _mapper.Map<CreateAccountResponse>(update);
-                return CustomResult("Success", result, HttpStatusCode.OK);
+                //var result = _mapper.Map<CreateAccountResponse>(update);
+                return CustomResult("Success", update, HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -141,8 +138,8 @@ namespace ShopSecondHand.Controllers
                 {
                     return CustomResult("Account da ton tai", HttpStatusCode.Accepted);
                 }
-                var result = _mapper.Map<CreateAccountResponse>(create);
-                return CustomResult("Success", result, HttpStatusCode.Created);
+                //var result = _mapper.Map<CreateAccountResponse>(create);
+                return CustomResult("Success", create, HttpStatusCode.Created);
             }
             catch (Exception)
             {

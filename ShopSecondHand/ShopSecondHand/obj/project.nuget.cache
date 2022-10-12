@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "R+kqfmEyp7vsk8c35uRc2x5wRq2DQE23QFm+ov2Hp9/HB10phKbTeAO4xGukw89yh43exP3162PTfJoG6Vwi0w==",
+  "dgSpecHash": "CZwFlFWw3rld6bMKROibN9EX5YvPibgB6E7hMnscqnbRanvytUh3SFXkSb6w3PipB8dDSQF7qz5NClN4tCtv0w==",
   "success": true,
-  "projectFilePath": "C:\\Study\\SWD\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand.csproj",
+  "projectFilePath": "C:\\Study\\SWD\\ShopSecondHandV2\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\automapper\\11.0.1\\automapper.11.0.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",

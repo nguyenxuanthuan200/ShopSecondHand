@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CoreApiResponse;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using ShopSecondHand.Data.RequestModels.AuthenRequest;
 using ShopSecondHand.Models;
+using ShopSecondHand.Repository.AuthenRepository;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,66 +18,37 @@ namespace Controllers.AuthenticationController
 {
     [Route("api/authen")]
     [ApiController]
-    public class AunthenticationController : ControllerBase
+    public class AunthenticationController : BaseController
     {
         public IConfiguration _configuration;
         private readonly ShopSecondHandContext _context;
+        private readonly IAuthenRepository _authenRepository;
 
-        public AunthenticationController(IConfiguration configuration, ShopSecondHandContext context)
+        public AunthenticationController(IConfiguration configuration, ShopSecondHandContext context, IAuthenRepository authenRepository)
         {
             _configuration = configuration;
             _context = context;
+            _authenRepository = authenRepository;
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string username, string password)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
-            Account user = await _context.Accounts.SingleOrDefaultAsync(m => m.UserName == username && m.Password == password);
-            var roleAdmin= await _context.Roles.SingleOrDefaultAsync(m => m.Name.Equals("ADMIN"));
-            if (user != null)
+            try
             {
-                if (user.RoleId==roleAdmin.Id) {
-                    var claims = new[]
-                    {
-                    new Claim(ClaimTypes.Role, "Admin"),
-                    new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                    new Claim("Id", user.UserName.ToString())
-                    };
-
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-
-                    var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-                    var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
-
-                    return Ok(new JwtSecurityTokenHandler().WriteToken(token));
-                }
-                else
+                var account = await _authenRepository.LoginByUserNameAndPassword(request);
+                if (account == null)
                 {
-                    var claims = new[]
-                    {
-                    new Claim(ClaimTypes.Role, "User"),
-                    new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                    new Claim("Id", user.UserName.ToString())
-                    };
-
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-
-                    var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-                    var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
-
-                    return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                    return CustomResult("Username Or Password wrong!!", HttpStatusCode.NotFound);
                 }
+                var result = await _authenRepository.GenerateToken(account);
+                return CustomResult("Success", result, HttpStatusCode.OK);
             }
-            else
+            catch (Exception)
             {
-                return BadRequest("Invalid Credentials");    
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
+
             }
         }
     }

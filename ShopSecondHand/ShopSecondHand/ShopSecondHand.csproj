@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\RequestModels\RoleRequest\**" />
+    <Content Remove="Data\RequestModels\RoleRequest\**" />
+    <EmbeddedResource Remove="Data\RequestModels\RoleRequest\**" />
+    <None Remove="Data\RequestModels\RoleRequest\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
@@ -29,7 +36,6 @@
     <Folder Include="Data\RequestModels\MessageRequest\" />
     <Folder Include="Data\RequestModels\WalletRequest\" />
     <Folder Include="Data\RequestModels\TransactionRequest\" />
-    <Folder Include="Data\RequestModels\RoleRequest\" />
     <Folder Include="Data\RequestModels\PostRequest\" />
   </ItemGroup>
 

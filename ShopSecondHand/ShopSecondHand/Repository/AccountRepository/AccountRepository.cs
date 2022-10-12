@@ -11,31 +11,32 @@ using System.Threading.Tasks;
 
 namespace ShopSecondHand.Repository.AccountRepository
 {
-    public class AccountRepository : BaseRepository<Account>, IAccountRepository
+    public class AccountRepository :  IAccountRepository
     {
         private readonly ShopSecondHandContext dbContext;
         private readonly IMapper _mapper;
 
-        public AccountRepository(ShopSecondHandContext dbContext) : base(dbContext)
+        public AccountRepository(ShopSecondHandContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            _mapper = mapper;
         }
 
-        public async Task<Account> GetByUserNameAndPassword(string userName, string password)
-        {
-            var account = await Get()
-                .Where(tempAccount => tempAccount.UserName.Equals(userName))
-                .FirstOrDefaultAsync();
+        //public async Task<Account> GetByUserNameAndPassword(string userName, string password)
+        //{
+        //    var account = await Get()
+        //        .Where(tempAccount => tempAccount.UserName.Equals(userName))
+        //        .FirstOrDefaultAsync();
 
-            if (account == null)
-                return null;
+        //    if (account == null)
+        //        return null;
 
-            var isVerified = BCrypt.Net.BCrypt.EnhancedVerify(password, account.Password);
+        //    var isVerified = BCrypt.Net.BCrypt.EnhancedVerify(password, account.Password);
 
-            return isVerified
-                ? account
-                : null;
-        }
+        //    return isVerified
+        //        ? account
+        //        : null;
+        //}
 
         public async Task<IEnumerable<GetAccountResponse>> GetAccountByBuildingId(Guid id)
         {
@@ -92,20 +93,21 @@ namespace ShopSecondHand.Repository.AccountRepository
             }
             return null;
         }
-        public async Task<Account> CreateAccountWithWallet(CreateAccountRequest userRequest)
+        public async Task<CreateAccountResponse> CreateAccountWithWallet(CreateAccountRequest userRequest)
         {
             var user = await dbContext.Accounts
-                 .FirstOrDefaultAsync(p => p.UserName.Equals(userRequest.UserName));
+                 .SingleOrDefaultAsync(p => p.UserName.Equals(userRequest.UserName));
             if (user != null)
                 return null;
             var roleId = await dbContext.Roles
                  .FirstOrDefaultAsync(p => p.Name.Equals("USER"));
             var Id = Guid.NewGuid();
+            var hashPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(userRequest.Password);
             Account userr = new Account();
             {
                 userr.Id = Id;
                 userr.UserName = userRequest.UserName;
-                userr.Password = userRequest.Password;
+                userr.Password = hashPassword;
                 userr.FullName = userRequest.FullName;
                 userr.Description = userRequest.Description;
                 userr.Phone = userRequest.Phone;
@@ -122,54 +124,10 @@ namespace ShopSecondHand.Repository.AccountRepository
             dbContext.Accounts.AddAsync(userr);
             dbContext.Wallets.AddAsync(wallet);
             dbContext.SaveChangesAsync();
-            //var re = _mapper.Map<CreateAccountResponse>(userr);
-            return userr;
-        }
-        public async Task<CreateAccountResponse> CreateAccount(CreateAccountRequest userRequest)
-        {
-            var user = await dbContext.Accounts
-                 .FirstOrDefaultAsync(p => p.UserName.Equals(userRequest.UserName));
-            if (user != null)
-                return null;
-            var roleId = await dbContext.Roles
-                 .FirstOrDefaultAsync(p => p.Name.Equals("USER"));
-            var Id = Guid.NewGuid();
-            Account userr = new Account();
-            {
-                userr.Id = Id;
-                userr.UserName = "1a";
-                userr.Password = "1a";
-                userr.FullName = "1a";
-                userr.Description = "1a";
-                userr.Phone = "1a";
-                userr.Gender = "1a";
-                userr.RoleId = roleId.Id;
-                userr.Status = true;
-                userr.BuildingId = userRequest.BuildingId;
-            };
-            //Wallet wallet = new Wallet();
-            //{
-            //    wallet.Id = Id;
-            //    wallet.Balance = 0;
-            //}
-            dbContext.Accounts.AddAsync(userr);
-            //dbContext.Wallets.AddAsync(wallet);
-            await dbContext.SaveChangesAsync();
-            var re = new CreateAccountResponse()
-            {
-               // Id = userr.Id,
-                UserName = userr.UserName,
-                // Password = getById.Password,
-                FullName = userr.FullName,
-                Description = userr.Description,
-                Phone = userr.Phone,
-                Gender = userr.Gender,
-                BuildingId = userr.BuildingId
-            };
+            var re = _mapper.Map<CreateAccountResponse>(userr);
             return re;
-            //var re = _mapper.Map<GetAccountResponse>(userr);
-            //return re;
         }
+   
 
         public void DeleteAccount(Guid id)
         {
@@ -205,7 +163,7 @@ namespace ShopSecondHand.Repository.AccountRepository
 
 
 
-        public async Task<Account> UpdateAccount(Guid id, UpdateAccountRequest userRequest)
+        public async Task<UpdateAccountResponse> UpdateAccount(Guid id, UpdateAccountRequest userRequest)
         {
             var upUser = await dbContext.Accounts
                 .Where(p => p.Id == id)
@@ -225,9 +183,9 @@ namespace ShopSecondHand.Repository.AccountRepository
             dbContext.Accounts.Update(upUser);
             await dbContext.SaveChangesAsync();
 
-            //var up = _mapper.Map<UpdateAccountResponse>(upUser);
+            var up = _mapper.Map<UpdateAccountResponse>(upUser);
 
-            return upUser;
+            return up;
         }
 
         public async Task<GetAccountResponse> GetAccountById(Guid id)

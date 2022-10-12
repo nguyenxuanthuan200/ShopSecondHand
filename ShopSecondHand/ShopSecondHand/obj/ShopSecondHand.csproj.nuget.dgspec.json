@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Study\\SWD\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand.csproj": {}
+    "C:\\Study\\SWD\\ShopSecondHandV2\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand.csproj": {}
   },
   "projects": {
-    "C:\\Study\\SWD\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand.csproj": {
+    "C:\\Study\\SWD\\ShopSecondHandV2\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Study\\SWD\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand.csproj",
+        "projectUniqueName": "C:\\Study\\SWD\\ShopSecondHandV2\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand.csproj",
         "projectName": "ShopSecondHand",
-        "projectPath": "C:\\Study\\SWD\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand.csproj",
+        "projectPath": "C:\\Study\\SWD\\ShopSecondHandV2\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Study\\SWD\\ShopSecondHand\\ShopSecondHand\\ShopSecondHand\\obj\\",
+        "outputPath": "C:\\Study\\SWD\\ShopSecondHandV2\\ShopSecondHand\\ShopSecondHand\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",

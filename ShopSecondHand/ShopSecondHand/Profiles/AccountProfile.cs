@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ShopSecondHand.Data.ResponseModels.Auths;
+using ShopSecondHand.Data.ResponseModels.AuthenResponse;
 
 namespace ShopSecondHand.Profiles
 {
@@ -16,7 +16,7 @@ namespace ShopSecondHand.Profiles
 
             //CreateMap<Account, GetAccountResponse>().ReverseMap();
 
-            CreateMap<Models.Account, JwtTokenDTO>().ReverseMap();
+            CreateMap<Models.Account, Token>().ReverseMap();
 
             CreateMap<Models.Account, Data.ResponseModels.AccountResponse.AccountWithWalletDTO>().ReverseMap();
         }
