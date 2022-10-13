@@ -21,23 +21,6 @@ namespace ShopSecondHand.Repository.AccountRepository
             this.dbContext = dbContext;
             _mapper = mapper;
         }
-
-        //public async Task<Account> GetByUserNameAndPassword(string userName, string password)
-        //{
-        //    var account = await Get()
-        //        .Where(tempAccount => tempAccount.UserName.Equals(userName))
-        //        .FirstOrDefaultAsync();
-
-        //    if (account == null)
-        //        return null;
-
-        //    var isVerified = BCrypt.Net.BCrypt.EnhancedVerify(password, account.Password);
-
-        //    return isVerified
-        //        ? account
-        //        : null;
-        //}
-
         public async Task<IEnumerable<GetAccountResponse>> GetAccountByBuildingId(Guid id)
         {
             var user = await dbContext.Accounts.Where(p => p.Status == true)

@@ -5,9 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\RequestModels\MessageRequest\**" />
     <Compile Remove="Data\RequestModels\RoleRequest\**" />
+    <Content Remove="Data\RequestModels\MessageRequest\**" />
     <Content Remove="Data\RequestModels\RoleRequest\**" />
+    <EmbeddedResource Remove="Data\RequestModels\MessageRequest\**" />
     <EmbeddedResource Remove="Data\RequestModels\RoleRequest\**" />
+    <None Remove="Data\RequestModels\MessageRequest\**" />
     <None Remove="Data\RequestModels\RoleRequest\**" />
   </ItemGroup>
 
@@ -33,7 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\RequestModels\MessageRequest\" />
     <Folder Include="Data\RequestModels\WalletRequest\" />
     <Folder Include="Data\RequestModels\TransactionRequest\" />
     <Folder Include="Data\RequestModels\PostRequest\" />

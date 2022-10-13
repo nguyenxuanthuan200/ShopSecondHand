@@ -20,10 +20,8 @@ namespace ShopSecondHand.Models
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Building> Buildings { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
-        public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
@@ -35,7 +33,7 @@ namespace ShopSecondHand.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=LAPTOP-1OKSR811\\SQL;Database=ShopSecondHand;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Data Source=XUANTHUAN\\SQL;Initial Catalog=ShopSecondHand;Integrated Security=True");
             }
         }
 
@@ -61,7 +59,7 @@ namespace ShopSecondHand.Models
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Phone)
                     .HasMaxLength(50)
@@ -110,23 +108,6 @@ namespace ShopSecondHand.Models
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<Message>(entity =>
-            {
-                entity.ToTable("Message");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ID");
-
-                entity.Property(e => e.Content).HasMaxLength(255);
-
-                entity.Property(e => e.ReceivereId).HasColumnName("ReceivereID");
-
-                entity.Property(e => e.SenderId).HasColumnName("SenderID");
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-            });
-
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.ToTable("Order");
@@ -135,19 +116,19 @@ namespace ShopSecondHand.Models
                     .ValueGeneratedNever()
                     .HasColumnName("ID");
 
+                entity.Property(e => e.AccountId).HasColumnName("AccountID");
+
                 entity.Property(e => e.PostId).HasColumnName("PostID");
-
-                entity.Property(e => e.AccountId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.Post)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.PostId)
-                    .HasConstraintName("FK_Order_Post");
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.AccountId)
                     .HasConstraintName("FK_Order_User");
+
+                entity.HasOne(d => d.Post)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.PostId)
+                    .HasConstraintName("FK_Order_Post");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
@@ -173,22 +154,6 @@ namespace ShopSecondHand.Models
                     .HasConstraintName("FK_OrderDetail_Product");
             });
 
-            modelBuilder.Entity<Payment>(entity =>
-            {
-                entity.ToTable("Payment");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ID");
-
-                entity.Property(e => e.OrderId).HasColumnName("OrderID");
-
-                entity.HasOne(d => d.Order)
-                    .WithMany(p => p.Payments)
-                    .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK_Payment_Order");
-            });
-
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.ToTable("Post");
@@ -196,6 +161,8 @@ namespace ShopSecondHand.Models
                 entity.Property(e => e.Id)
                     .ValueGeneratedNever()
                     .HasColumnName("ID");
+
+                entity.Property(e => e.AccountId).HasColumnName("AccountID");
 
                 entity.Property(e => e.BuildingId).HasColumnName("BuildingID");
 
@@ -209,7 +176,10 @@ namespace ShopSecondHand.Models
 
                 entity.Property(e => e.Title).HasMaxLength(50);
 
-                entity.Property(e => e.AccountId).HasColumnName("UserID");
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Posts)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("FK_Post_User");
 
                 entity.HasOne(d => d.Building)
                     .WithMany(p => p.Posts)
@@ -221,11 +191,6 @@ namespace ShopSecondHand.Models
                     .HasForeignKey<Post>(d => d.Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Post_Product");
-
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.Posts)
-                    .HasForeignKey(d => d.AccountId)
-                    .HasConstraintName("FK_Post_User");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -269,14 +234,17 @@ namespace ShopSecondHand.Models
 
                 entity.Property(e => e.Description).HasMaxLength(255);
 
-                entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
+                entity.Property(e => e.TransactionTime).HasColumnType("datetime");
+
+                entity.Property(e => e.TransactionType).HasMaxLength(50);
 
                 entity.Property(e => e.WalletId).HasColumnName("WalletID");
 
-                entity.HasOne(d => d.Payment)
-                    .WithMany(p => p.Transactions)
-                    .HasForeignKey(d => d.PaymentId)
-                    .HasConstraintName("FK_Transaction_Payment");
+                entity.HasOne(d => d.IdNavigation)
+                    .WithOne(p => p.Transaction)
+                    .HasForeignKey<Transaction>(d => d.Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Transaction_Order");
 
                 entity.HasOne(d => d.Wallet)
                     .WithMany(p => p.Transactions)

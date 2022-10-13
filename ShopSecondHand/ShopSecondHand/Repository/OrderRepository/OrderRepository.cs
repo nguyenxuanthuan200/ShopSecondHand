@@ -115,7 +115,7 @@ namespace ShopSecondHand.Repository.OrderRepository
             return result;
         }
 
-        public async Task<IEnumerable<GetOrderResponse>> GetOrderByUserId(Guid id)
+        public async Task<IEnumerable<GetOrderResponse>> GetOrderByAccountId(Guid id)
         {
             var getByPostId = await dbContext.Orders
                 .FirstOrDefaultAsync(p => p.AccountId == id);
@@ -125,17 +125,19 @@ namespace ShopSecondHand.Repository.OrderRepository
 
 
             var userByBuilding = await dbContext.Orders
-                .Where(p => p.PostId == id).ToListAsync();
+                .Where(p => p.AccountId == id).ToListAsync();
 
-            IEnumerable<GetOrderResponse> result = userByBuilding.Select(
-                x =>
+            IEnumerable<GetOrderResponse> result =userByBuilding.Select(
+                 x =>
                 {
+                 //   var getTransaction = await dbContext.Transactions
+                 //.SingleOrDefaultAsync(p => p.Id == x.Id);
                     return new GetOrderResponse()
                     {
-                        Id=x.Id,
+                        Id = x.Id,
                         PostId = x.PostId,
                         AccountId = x.AccountId,
-                        Total = x.Total,
+                        Total = x.Total
                     };
                 }
                 ).ToList();

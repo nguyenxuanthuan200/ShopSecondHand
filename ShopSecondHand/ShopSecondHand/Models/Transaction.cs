@@ -10,10 +10,11 @@ namespace ShopSecondHand.Models
         public Guid Id { get; set; }
         public string Description { get; set; }
         public int? Status { get; set; }
-        public Guid? PaymentId { get; set; }
         public Guid? WalletId { get; set; }
+        public string TransactionType { get; set; }
+        public DateTime? TransactionTime { get; set; }
 
-        public virtual Payment Payment { get; set; }
+        public virtual Order IdNavigation { get; set; }
         public virtual Wallet Wallet { get; set; }
     }
 }

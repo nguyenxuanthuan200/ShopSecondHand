@@ -127,6 +127,8 @@ namespace ShopSecondHand
                    };
                });
 
+            services.Configure<JwtConfig>(Configuration.GetSection("Jwt"));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShopSecondHand", Version = "v1" });

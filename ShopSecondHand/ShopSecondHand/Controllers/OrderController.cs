@@ -76,11 +76,11 @@ namespace ShopSecondHand.Controllers
             }
         }
         [HttpGet("users")]
-        public async Task<IActionResult> GetOrderByUserId(Guid id)
+        public async Task<IActionResult> GetOrderByAccountId(Guid id)
         {
             try
             {
-                var result = await orderRepository.GetOrderByUserId(id);
+                var result = await orderRepository.GetOrderByAccountId(id);
                 if (result == null)
                 {
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
