@@ -37,6 +37,7 @@ namespace ShopSecondHand.Repository.AccountRepository
                         FullName = x.FullName,
                         Description = x.Description,
                         Phone = x.Phone,
+                        AvatarUrl = x.AvatarUrl,
                         Gender = x.Gender,
                         BuildingId = x.BuildingId,
                     };
@@ -68,6 +69,7 @@ namespace ShopSecondHand.Repository.AccountRepository
                     FullName = getById.FullName,
                     Description = getById.Description,
                     Phone = getById.Phone,
+                    AvatarUrl = getById.AvatarUrl,
                     Gender = getById.Gender,
                     BuildingId = getById.BuildingId,
                     Wallet = ra
@@ -95,6 +97,7 @@ namespace ShopSecondHand.Repository.AccountRepository
                 userr.Description = userRequest.Description;
                 userr.Phone = userRequest.Phone;
                 userr.Gender = userRequest.Gender;
+                userr.AvatarUrl = userRequest.AvatarUrl;
                 userr.RoleId = roleId.Id;
                 userr.Status = true;
                 userr.BuildingId = userRequest.BuildingId;
@@ -136,6 +139,7 @@ namespace ShopSecondHand.Repository.AccountRepository
                         FullName = x.FullName,
                         Description = x.Description,
                         Phone = x.Phone,
+                        AvatarUrl = x.AvatarUrl,
                         Gender = x.Gender,
                         BuildingId = x.BuildingId,
                     };
@@ -160,6 +164,7 @@ namespace ShopSecondHand.Repository.AccountRepository
             upUser.FullName = userRequest.FullName;
             upUser.Description = userRequest.Description;
             upUser.Phone = userRequest.Phone;
+            upUser.AvatarUrl = userRequest.AvatarUrl;
             upUser.Gender = userRequest.Gender;
             upUser.BuildingId = userRequest.BuildingId;
 
@@ -185,6 +190,7 @@ namespace ShopSecondHand.Repository.AccountRepository
                     FullName = getById.FullName,
                     Description = getById.Description,
                     Phone = getById.Phone,
+                    AvatarUrl = getById.AvatarUrl,
                     Gender = getById.Gender,
                     BuildingId = getById.BuildingId,
                 };

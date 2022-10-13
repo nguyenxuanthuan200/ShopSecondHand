@@ -1,6 +1,5 @@
 ﻿using System;
-using ShopSecondHand.Models;
-
+using ShopSecondHand.Data.ResponseModels.TransactionResponse;
 namespace ShopSecondHand.Data.ResponseModels.OrderResponse
 {
     public class GetOrderWithTransactionResponse
@@ -9,6 +8,6 @@ namespace ShopSecondHand.Data.ResponseModels.OrderResponse
         public Guid? PostId { get; set; }
         public Guid? AccountId { get; set; }
         public double? Total { get; set; }
-        public Transaction Transaction { get; set; }
+        public TransactionDTO Transaction { get; set; }
     }
 }

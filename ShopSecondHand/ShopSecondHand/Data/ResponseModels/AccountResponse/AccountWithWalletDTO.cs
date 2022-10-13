@@ -11,6 +11,7 @@ namespace ShopSecondHand.Data.ResponseModels.AccountResponse
         public string Description { get; set; }
         public string Phone { get; set; }
         public string Gender { get; set; }
+        public string AvatarUrl { get; set; }
         public Guid? BuildingId { get; set; }
         public WalletDTO Wallet { get; set; }
     }
