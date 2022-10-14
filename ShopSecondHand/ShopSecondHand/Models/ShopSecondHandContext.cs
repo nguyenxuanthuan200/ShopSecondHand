@@ -57,6 +57,8 @@ namespace ShopSecondHand.Models
 
                 entity.Property(e => e.Gender).HasMaxLength(50);
 
+                entity.Property(e => e.AvatarUrl).HasMaxLength(500);
+
                 entity.Property(e => e.Password)
                     .IsRequired()
                     .HasMaxLength(100);

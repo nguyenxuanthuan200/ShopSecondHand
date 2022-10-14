@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ShopSecondHand.Data.RequestModels.OrderRequest;
 using ShopSecondHand.Data.ResponseModels.OrderResponse;
+using ShopSecondHand.Data.ResponseModels.TransactionResponse;
 using ShopSecondHand.Models;
 using System;
 using System.Collections.Generic;
@@ -26,16 +27,30 @@ namespace ShopSecondHand.Repository.OrderRepository
             //    .SingleOrDefaultAsync(p => p.Id==request.id);
             //if (building != null)
             //    return null;
+            var id= Guid.NewGuid();
             Order order = new Order();
             {
-                order.Id = Guid.NewGuid();
+                order.Id = id;
                 order.PostId = request.PostId;
                 order.AccountId = request.AccountId;
                 order.Total = request.Total;
             };
+            Transaction transaction = new Transaction();
+            {
+                transaction.Id = id;
+                transaction.TransactionTime= DateTime.Now;
+                transaction.TransactionType = request.TransactionType;
+                transaction.WalletId = request.WalletId;
+                transaction.Description = request.Description;
+            }
             dbContext.Orders.AddAsync(order);
+            dbContext.Transactions.AddAsync(transaction);
             await dbContext.SaveChangesAsync();
             var re = _mapper.Map<CreateOrderResponse>(order);
+            re.TransactionType = transaction.TransactionType;
+            re.TransactionTime = transaction.TransactionTime;
+            re.Description = transaction.Description;
+            re.WalletId = transaction.WalletId;
             return re;
         }
 
@@ -69,20 +84,22 @@ namespace ShopSecondHand.Repository.OrderRepository
             return result;
         }
 
-        public async Task<GetOrderResponse> GetOrderById(Guid id)
+        public async Task<GetOrderWithTransactionResponse> GetOrderById(Guid id)
         {
             var getById = await dbContext.Orders
-
                 .SingleOrDefaultAsync(p => p.Id == id);
+            var transaction= await dbContext.Transactions.SingleOrDefaultAsync(p => p.Id == id);
             if (getById != null)
             {
-                var re = new GetOrderResponse()
+                var Transaction = _mapper.Map<TransactionDTO>(transaction);
+                var re = new GetOrderWithTransactionResponse()
                 {
                     Id=getById.Id,
                     PostId = getById.PostId,
                     AccountId = getById.AccountId,
                     Total = getById.Total,
-                };
+                    Transaction = Transaction
+            };
                 return re;
             }
             return null;
